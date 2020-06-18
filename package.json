@@ -2,6 +2,7 @@
   "name": "crypto-client",
   "version": "0.1.0",
   "private": true,
+  "main": "public/electron-app.js",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -14,7 +15,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:nobrowser": "BROWSER=none yarn start",
+    "watch:tailwind": "postcss -w src/tailwindcss/tailwind.css -o src/tailwind.generated.css --verbose",
+    "wait:server": "wait-on http://localhost:3000",
+    "electron": "electron .",
+    "run:electron": "run-s wait:server electron",
+    "dev": "run-p -r watch:tailwind start:nobrowser run:electron"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -30,5 +37,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron": "^9.0.4",
+    "npm-run-all": "^4.1.5",
+    "postcss-cli": "^7.1.1",
+    "tailwindcss": "^1.4.6",
+    "wait-on": "^5.0.1"
   }
 }
