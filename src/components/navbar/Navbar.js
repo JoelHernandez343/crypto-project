@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import Item from './Item';
-
 import mainRoutes from '../../routes/main_routes';
+import Item from './Item';
+import User from './User';
 
 export default function Navbar({ changeSection }) {
 
@@ -23,7 +23,8 @@ export default function Navbar({ changeSection }) {
     ));
 
   return (
-    <nav className="w-16 sm:w-64 bg-gray-200">
+    <nav className="w-16 sm:w-16 sm:w-64 bg-gray-200 z-20 h-screen overflow-y-auto">
+      <User user={{ name: 'Joel Hernández', email: 'joel.programador@gmail.com', connected: true }} />
       <ul>
         {buildList(active)}
       </ul>

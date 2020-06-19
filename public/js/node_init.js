@@ -1,3 +1,5 @@
 const _node = {
-  path: require('path')
+  remote: require('electron').remote
 };
+
+console.log(_node);

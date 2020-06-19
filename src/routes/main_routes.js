@@ -5,7 +5,7 @@ import AboutSection from '../components/sections/AboutSection';
 
 const mainRoutes = [
   {
-    section: 'encrypt',
+    section: 'upload',
     navInfo: {
       title: "Subir archivos",
       icon: "cloud-upload-outline"
@@ -13,7 +13,7 @@ const mainRoutes = [
     route: <UploadSection />
   },
   {
-    section: 'decrypt',
+    section: 'download',
     navInfo: {
       title: "Descargar archivos",
       icon: "download-lock-outline"

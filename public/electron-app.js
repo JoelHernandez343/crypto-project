@@ -8,8 +8,9 @@ const path = require('path');
 const createWindow = () => {
 
   let options = {
-    width: 900,
+    width: 1000,
     height: 680,
+    frame: false,
     // Permitimos que el proceso Render acceda a la API de node directamente.
     webPreferences: {
       nodeIntegration: true
