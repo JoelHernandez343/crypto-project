@@ -16,12 +16,13 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "gulp": "gulp -f gulp",
     "start:nobrowser": "BROWSER=none yarn start",
-    "watch:tailwind": "postcss -w src/tailwindcss/tailwind.css -o src/tailwind.generated.css --verbose",
     "wait:server": "wait-on http://localhost:3000",
     "electron": "electron .",
     "run:electron": "run-s wait:server electron",
-    "dev": "run-p -r watch:tailwind start:nobrowser run:electron"
+    "dev:last": "run-p -r start:nobrowser run:electron",
+    "dev": "run-s gulp dev:last"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -39,9 +40,12 @@
     ]
   },
   "devDependencies": {
+    "@mdi/font": "^5.3.45",
     "electron": "^9.0.4",
+    "gulp": "^4.0.2",
+    "gulp-postcss": "^8.0.0",
+    "gulp-rename": "^2.0.0",
     "npm-run-all": "^4.1.5",
-    "postcss-cli": "^7.1.1",
     "tailwindcss": "^1.4.6",
     "wait-on": "^5.0.1"
   }

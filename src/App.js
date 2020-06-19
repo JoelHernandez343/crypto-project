@@ -1,27 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
 import Navbar from './components/navbar/Navbar';
 
+import mainRoutes from './routes/main_routes';
+
 function App() {
+
+  const [section, setSection] = useState('encrypt');
+
+  const buildSection = section => mainRoutes.find(route => route.section === section).route;
+
   return (
-    <div className="text-center flex min-h-screen" style={{ minWidth: '100vw' }}>
-      <Navbar className="hidden sm:block w-64" />
-      <header className="bg-indigo-900 flex flex-col items-center justify-center text-xl text-white flex-grow">
-        <img src={logo} className="h-64 pointer-events-none" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="text-center flex min-h-screen select-none min-w-screen">
+      <Navbar changeSection={setSection} />
+      {buildSection(section)}
     </div>
   );
 }
