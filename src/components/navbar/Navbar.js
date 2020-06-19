@@ -23,7 +23,7 @@ export default function Navbar({ changeSection }) {
     ));
 
   return (
-    <nav className="w-16 sm:w-16 sm:w-64 bg-gray-200 z-20 h-screen overflow-y-auto">
+    <nav className="flex-shrink-0 w-16 md:w-64 bg-gray-200 z-20 h-screen overflow-y-auto">
       <User user={{ name: 'Joel Hernández', email: 'joel.programador@gmail.com', connected: true }} />
       <ul>
         {buildList(active)}

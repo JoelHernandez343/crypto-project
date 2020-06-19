@@ -1,5 +1,7 @@
-const _node = {
-  remote: require('electron').remote
-};
+const remote = require('electron').remote;
+const { dialog } = remote;
 
-console.log(_node);
+const _node = {
+  remote,
+  dialog
+};

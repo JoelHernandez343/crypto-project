@@ -1,4 +1,3 @@
-import React from 'react';
 import UploadSection from '../components/sections/UploadSection';
 import DownloadSection from '../components/sections/DownloadSection';
 import AboutSection from '../components/sections/AboutSection';
@@ -10,7 +9,7 @@ const mainRoutes = [
       title: "Subir archivos",
       icon: "cloud-upload-outline"
     },
-    route: <UploadSection />
+    route: UploadSection
   },
   {
     section: 'download',
@@ -18,7 +17,7 @@ const mainRoutes = [
       title: "Descargar archivos",
       icon: "download-lock-outline"
     },
-    route: <DownloadSection />
+    route: DownloadSection
   },
   {
     section: 'about',
@@ -26,7 +25,7 @@ const mainRoutes = [
       title: "Sobre",
       icon: "account-supervisor-circle",
     },
-    route: <AboutSection />
+    route: AboutSection
   },
 ];
 

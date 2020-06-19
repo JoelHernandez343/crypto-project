@@ -1,10 +1,22 @@
 import React from 'react';
-import logo from './../../logo.svg';
+import MainSection from './upload/MainSection';
 
-export default function UploadSection() {
+export default function UploadSection({ view }) {
+
   return (
-    <div className="bg-gray-300 min-h-full flex flex-col items-center justify-center text-xl text-white flex-grow">
-      <img src={logo} className="h-64 pointer-events-none App-logo" alt="logo" />
-    </div>
+    <div className={`${view ? '' : 'hidden'} bg-gray-300 text-xl px-8 flex flex-col min-h-full`}>
+      <div className="text-left">
+        <h1 className="mt-5 text-5xl leading-9 text-indigo-900 title">
+          Subir archivos
+        </h1>
+        <h2 className="text-2xl title text-gray-600">
+          Sube los archivos a tu nube
+        </h2>
+      </div>
+
+      <div className="flex-grow md:p-10 flex ">
+        <MainSection />
+      </div>
+    </div >
   );
 }

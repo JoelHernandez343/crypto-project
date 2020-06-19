@@ -10,10 +10,14 @@ const createWindow = () => {
   let options = {
     width: 1000,
     height: 680,
+    minWidth: 570,
+    minHeigth: 470,
     frame: false,
+    useContentSize: true,
     // Permitimos que el proceso Render acceda a la API de node directamente.
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule: true
     }
   }
 
