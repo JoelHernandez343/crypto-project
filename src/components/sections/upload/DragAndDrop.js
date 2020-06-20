@@ -55,15 +55,15 @@ export default function DragAndDrop({ addFiles, stageFiles }) {
   }
 
   return (
-    <div className="w-full flex-grow rounded bg-gray-200 shadow-md p-4 flex justify-center items-center flex-col max-h-full">
+    <div className="w-full flex-grow rounded bg-gray-200 shadow p-4 flex justify-center items-center flex-col max-h-full">
       <ListOfFiles visible={!initial} stageFiles={[...stageFiles]} />
 
-      <div className={`${initial ? 'flex-grow flex-col' : 'h-16'} flex items-center justify-center w-full relative`}>
-        <div className="absolute w-full h-full bg-transparent hover:bg-gray-400 hover:bg-opacity-25 cursor-pointer transition ease-in-out duration-150"
+      <div className={`${initial ? 'flex-grow flex-col' : 'h-20'} flex items-center justify-center w-full relative`}>
+        <div className="absolute w-full h-full bg-transparent hover:bg-indigo-500 hover:bg-opacity-25 cursor-pointer transition ease-in-out duration-150"
           onDragEnter={onDragEnter} onDragOver={rf} onDragLeave={onDragLeave} onDragEnd={rf} onDrop={onDrop} onClick={onClick}
         />
         <span className={`mdi mdi-text-box-plus-outline text-gray-400`} style={{ fontSize: `${initial ? '5rem' : '1.5rem'}` }}></span>
-        <p className={`${initial ? '' : 'text-base ml-3'} text-gray-500`}>Arrastra tus archivos aquí</p>
+        <p className={`${initial ? 'mb-4' : 'text-base ml-3'} text-gray-500`}>Arrastra tus archivos aquí</p>
       </div>
     </div>
   );
