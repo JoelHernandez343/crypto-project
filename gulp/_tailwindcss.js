@@ -7,6 +7,6 @@ const compile_tailwindcss = () =>
   src('assets/tailwind.css')
     .pipe(postcss([tailwindcss]))
     .pipe(rename(path => path.extname = ".generated.css"))
-    .pipe(dest('src'));
+    .pipe(dest('src/css'));
 
 exports.compile_tailwindcss = compile_tailwindcss;

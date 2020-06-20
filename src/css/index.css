@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'gilroy-extrabold';
-  src: url('./fonts/gilroy-extrabold.otf');
+  src: url('../fonts/gilroy-extrabold.otf');
 }
 
 body {

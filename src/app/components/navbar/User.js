@@ -1,6 +1,6 @@
 import React from 'react';
 
-import userImage from '../../images/user.jpg';
+import userImage from '../../../images/user.jpg';
 
 export default function User({ user }) {
   return (

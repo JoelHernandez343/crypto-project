@@ -23,6 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # generated assets
-/src/tailwind.generated.css
+/src/css/tailwind.generated.css
 /src/fonts/materialdesignicons-webfont*
 /src/css/materialdesignicons.min.css

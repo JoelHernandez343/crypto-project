@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import './css/index.css';
+import App from './app/App';
 import * as serviceWorker from './serviceWorker';
-import './tailwind.generated.css';
+import './css/tailwind.generated.css';
 import './css/materialdesignicons.min.css'
 
 ReactDOM.render(
