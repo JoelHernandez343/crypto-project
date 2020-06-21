@@ -13,7 +13,7 @@ export default function () {
   return (
     <div className="w-full flex-grow flex flex-col md:flex-row">
       <div className="w-full flex flex-col">
-        <div className="flex-grow flex p-5">
+        <div className="flex-grow flex">
           <DragAndDrop addFiles={addFiles} stageFiles={[...stageFiles]} />
         </div>
         <div className={`${stageFiles.length === 0 ? 'hidden' : ''} w-full flex flex-col p-5`}>

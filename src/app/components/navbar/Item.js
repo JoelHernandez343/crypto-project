@@ -10,7 +10,7 @@ export default function Item({ className, icon, title, active, index, updateList
       <div className="flex-grow md:flex-grow-0 md:w-5 md:mr-5 text-xl">
         <span className={`mdi mdi-${icon}`}></span>
       </div>
-      <div className="hidden md:block flex-grow flex text-left title">
+      <div className="hidden md:block flex-grow flex text-left quicksand font-bold">
         <p>{title}</p>
       </div>
       <div className={`${active ? 'bg-indigo-900' : ''} block h-full`} style={{ width: '4px' }}></div>

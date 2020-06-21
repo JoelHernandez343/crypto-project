@@ -6,15 +6,15 @@ export default function UploadSection({ view }) {
   return (
     <div className={`${view ? '' : 'hidden'} bg-gray-300 text-xl px-8 flex flex-col min-h-full`}>
       <div className="text-left">
-        <h1 className="mt-5 text-5xl leading-9 text-indigo-900 title">
+        <h1 className="mt-5 text-3xl leading-9 text-indigo-900 quicksand font-bold">
           Subir archivos
         </h1>
-        <h2 className="text-2xl title text-gray-600">
+        <h2 className="text-xl text-gray-600 quicksand font-medium mb-3">
           Sube los archivos a tu nube
         </h2>
       </div>
 
-      <div className="flex-grow md:p-10 flex ">
+      <div className="flex-grow py-10 md:px-10 lg:px-16 xl:px-32 flex ">
         <MainSection />
       </div>
     </div >

@@ -14,11 +14,11 @@ function App() {
     sections.map((s, index) => <s.renderer view={s.section === section} />);
 
   return (
-    <div className="text-center flex min-h-screen select-none min-w-screen">
+    <div className="text-center flex min-h-screen select-none min-w-screen scroll">
       <Navbar changeSection={setSection} />
       <div className="flex-grow flex flex-col w-0">
         <Topbar />
-        <div className="flex-grow overflow-y-auto overflow-x-hidden h-0">
+        <div className="flex-grow overflow-y-auto overflow-x-hidden h-0 scroll">
           {buildSections(section)}
         </div>
       </div>
