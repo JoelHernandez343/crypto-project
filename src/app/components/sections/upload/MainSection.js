@@ -4,7 +4,7 @@ import MainButton from './../../buttons/MainButton';
 
 /*global _node*/
 
-export default function () {
+export default function MainSection({ showMessage }) {
 
   const [stageFiles, setStageFiles] = useState([]);
 
@@ -14,11 +14,16 @@ export default function () {
   const addFiles = async (files) => {
 
     const areFiles = await Promise.all(files.map(async (file) => await getIsFile(file)));
-    let message = [];
-    const filesToAdd = files.filter((file, index) => {
-      if (!areFiles[index]) message.push(file);
-      return areFiles[index];
-    });
+    const filesToAdd = files.filter((file, index) => areFiles[index]);
+
+    if (!areFiles.reduce((prev, current) => prev & current, true)) {
+      showMessage({
+        title: 'No se pueden agregar carpetas.',
+        message: 'No se pueden agregar carpetas, no soportado.',
+        style: 'error',
+        display: true
+      });
+    }
 
     setStageFiles(prev => Array.from(new Set([...prev, ...filesToAdd])));
   }

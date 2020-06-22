@@ -12,10 +12,11 @@ function App() {
 
   const sections = mainRoutes.map(route => ({ section: route.section, renderer: route.route }));
   const buildSections = section =>
-    sections.map((s, index) => <s.renderer key={`section-${s.section}`} view={s.section === section} />);
+    sections.map((s, index) => <s.renderer key={`section-${s.section}`} view={s.section === section} showMessage={showMessage} />);
 
-  const [showMessage, setShowMessage] = useState(true);
-  const closeMessage = () => setShowMessage(false);
+  const [messageInfo, setMessageInfo] = useState({ display: false });
+  const closeMessage = () => setMessageInfo({ display: false });
+  const showMessage = info => setMessageInfo(info);
 
   return (
     <div className="text-center flex min-h-screen select-none min-w-screen scroll">
@@ -25,7 +26,7 @@ function App() {
         <div className="flex-grow overflow-y-auto overflow-x-hidden h-0 scroll">
           {buildSections(section)}
         </div>
-        <MessageContainer show={showMessage} style="other" close={closeMessage} title={'Esto es un titulo'} message={'Vivian, espero que estes bien, te extraño, estraño hablar contigo, eres mi amiga, y siento que te he fallado como suelo hacerlo siempre'} />
+        {messageInfo.display ? <MessageContainer close={closeMessage} info={messageInfo} /> : ''}
       </div>
     </div>
   );
