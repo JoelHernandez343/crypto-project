@@ -20,6 +20,11 @@ export default function Message({ title, message, style, close }) {
         <div className="quicksand font-bold">{title}</div>
         <div className="quicksand font-medium text-sm break-words">{message}</div>
       </div>
+      <div className="w-3 flex-shrink-0 flex items-start justify-center">
+        <div className="cursor-pointer" onClick={close}>
+          <span className="mdi mdi-close pointer-events-none"></span>
+        </div>
+      </div>
     </div>
   );
 }
