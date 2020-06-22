@@ -11,7 +11,7 @@ function App() {
 
   const sections = mainRoutes.map(route => ({ section: route.section, renderer: route.route }));
   const buildSections = section =>
-    sections.map((s, index) => <s.renderer view={s.section === section} />);
+    sections.map((s, index) => <s.renderer key={`section-${s.section}`} view={s.section === section} />);
 
   return (
     <div className="text-center flex min-h-screen select-none min-w-screen scroll">

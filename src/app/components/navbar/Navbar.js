@@ -19,7 +19,7 @@ export default function Navbar({ changeSection }) {
 
   const buildList = active =>
     menu.map(({ section, title, icon }, index) => (
-      <Item key={section} title={title} icon={icon} index={index} active={index === active} updateList={changeAll} />
+      <Item key={`list-item-${section}`} title={title} icon={icon} index={index} active={index === active} updateList={changeAll} />
     ));
 
   return (

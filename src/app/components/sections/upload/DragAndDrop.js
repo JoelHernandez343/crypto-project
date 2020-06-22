@@ -1,35 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ListOfFiles from './ListOfFiles';
 /*global _node */
 
-export default function DragAndDrop({ addFiles, stageFiles }) {
-
-  const [initial, setInitial] = useState(true);
+export default function DragAndDrop({ addFiles, stageFiles, removeFile, initial }) {
 
   console.log(stageFiles);
 
-  const addVisualEffect = e => {
-    e.classList.add('bg-gray-400', 'bg-opacity-25');
-  }
+  const addVisualEffect = e =>
+    e.classList.add('bg-indigo-500', 'bg-opacity-25');
 
-  const removeVisualEffect = e => {
-    e.classList.remove('bg-gray-400', 'bg-opacity-25');
-  }
+  const removeVisualEffect = e =>
+    e.classList.remove('bg-indigo-500', 'bg-opacity-25');
 
   const rf = e => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const onDragEnter = e => {
-    console.log('Entre');
-    addVisualEffect(e.target);
-  }
+  const onDragEnter = e => addVisualEffect(e.target);
 
-  const onDragLeave = e => {
-    console.log('Sali');
-    removeVisualEffect(e.target);
-  }
+  const onDragLeave = e => removeVisualEffect(e.target);
 
   const onDrop = e => {
     removeVisualEffect(e.target);
@@ -43,10 +33,8 @@ export default function DragAndDrop({ addFiles, stageFiles }) {
   }
 
   const changeState = files => {
-    if (files.length !== 0) {
-      setInitial(false);
+    if (files.length !== 0)
       addFiles(files);
-    }
   }
 
   const onClick = async () => {
@@ -55,8 +43,8 @@ export default function DragAndDrop({ addFiles, stageFiles }) {
   }
 
   return (
-    <div className="w-full flex-grow rounded bg-gray-300 shadow p-4 flex justify-center items-center flex-col max-h-full">
-      <ListOfFiles visible={!initial} stageFiles={[...stageFiles]} />
+    <div className="w-full flex-grow rounded bg-gray-200 shadow p-4 flex justify-center items-center flex-col max-h-full">
+      <ListOfFiles visible={!initial} stageFiles={stageFiles} removeFile={removeFile} />
 
       <div className={`${initial ? 'flex-grow flex-col' : 'h-20'} flex items-center justify-center w-full relative`}>
         <div className="absolute w-full h-full bg-transparent hover:bg-indigo-500 hover:bg-opacity-25 cursor-pointer transition ease-in-out duration-150"
