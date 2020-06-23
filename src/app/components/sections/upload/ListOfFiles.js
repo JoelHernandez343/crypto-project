@@ -4,7 +4,7 @@ import CloseAllButton from '../../buttons/CloseAllButton';
 
 export default function ListOfFiles({
   visible,
-  stageFiles,
+  stagedFiles,
   removeFile,
   removeAllFiles,
 }) {
@@ -23,7 +23,7 @@ export default function ListOfFiles({
         <CloseAllButton onClick={removeAllFiles} />
       </div>
       <div className="flex-grow bg-gray-200 w-full overflow-y-auto scroll p-1">
-        {buildFileList(stageFiles)}
+        {buildFileList(stagedFiles)}
       </div>
     </div>
   );

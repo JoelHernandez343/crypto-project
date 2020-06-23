@@ -4,7 +4,7 @@ import ListOfFiles from './ListOfFiles';
 
 export default function DragAndDrop({
   addFiles,
-  stageFiles,
+  stagedFiles,
   removeFile,
   removeAllFiles,
   initial,
@@ -50,7 +50,7 @@ export default function DragAndDrop({
     <div className="w-full flex-grow rounded bg-gray-200 shadow p-4 flex justify-center items-center flex-col max-h-full">
       <ListOfFiles
         visible={!initial}
-        stageFiles={stageFiles}
+        stagedFiles={stagedFiles}
         removeFile={removeFile}
         removeAllFiles={removeAllFiles}
       />

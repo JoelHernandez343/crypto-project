@@ -1,11 +1,10 @@
 import React from 'react';
 import getIcon from './getIcon';
+import { getFileName } from '../../../helpers/FileHelper';
 
 import CloseButton from '../../buttons/CloseButton';
 
 export default function FileItem({ file, removeFile }) {
-  const getFileName = file => file.replace(/.*[\\/]/, '');
-
   const buildIcon = file => (
     <span className={`mdi mdi-${getIcon(getFileName(file))}`}></span>
   );
