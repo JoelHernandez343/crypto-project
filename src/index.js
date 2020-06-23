@@ -4,7 +4,7 @@ import './css/index.css';
 import App from './app/App';
 import * as serviceWorker from './serviceWorker';
 import './css/tailwind.generated.css';
-import './css/materialdesignicons.min.css'
+import './css/materialdesignicons.min.css';
 
 ReactDOM.render(
   <React.StrictMode>

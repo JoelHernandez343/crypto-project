@@ -6,26 +6,26 @@ const mainRoutes = [
   {
     section: 'upload',
     navInfo: {
-      title: "Subir archivos",
-      icon: "cloud-upload-outline"
+      title: 'Subir archivos',
+      icon: 'cloud-upload-outline',
     },
-    route: UploadSection
+    route: UploadSection,
   },
   {
     section: 'download',
     navInfo: {
-      title: "Descargar archivos",
-      icon: "download-lock-outline"
+      title: 'Descargar archivos',
+      icon: 'download-lock-outline',
     },
-    route: DownloadSection
+    route: DownloadSection,
   },
   {
     section: 'about',
     navInfo: {
-      title: "Sobre",
-      icon: "account-supervisor-circle",
+      title: 'Sobre',
+      icon: 'account-supervisor-circle',
     },
-    route: AboutSection
+    route: AboutSection,
   },
 ];
 

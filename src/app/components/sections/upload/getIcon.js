@@ -2,10 +2,10 @@ const image = 'file-image-outline';
 const music = 'file-music-outline';
 const word = 'microsoft-word';
 const excel = 'microsoft-excel';
-const pp = 'microsoft-powerpoint'
+const pp = 'microsoft-powerpoint';
 const pdf = 'file-pdf-outline';
 const others = 'text-box-outline';
-const console = 'console';
+const consoleIcon = 'console';
 const font = 'format-letter-case-upper';
 const zip = 'folder-zip-outline';
 const code = 'code-json';
@@ -27,7 +27,7 @@ icons
   .set('ppt', pp)
   .set('pptx', pp)
   .set('pdf', pdf)
-  .set('sh', console)
+  .set('sh', consoleIcon)
   .set('ttf', font)
   .set('otf', font)
   .set('zip', zip)
@@ -44,6 +44,5 @@ icons
 export default function getIcon(name) {
   let ext = name.substring(name.lastIndexOf('.') + 1);
 
-  return name === ext || !icons.has(ext) ?
-    icons.get('others') : icons.get(ext);
+  return name === ext || !icons.has(ext) ? icons.get('others') : icons.get(ext);
 }
