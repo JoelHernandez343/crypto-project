@@ -86,7 +86,10 @@ export default function MainSection({ messageQueue }) {
 
   const removeAllFiles = () => setStagedFiles([]);
 
-  const addProtectedFiles = files => {};
+  const addProtectedFiles = files => {
+    setProtectedFiles(stagedFiles);
+    removeAllFiles();
+  };
 
   return (
     <div className="w-full flex-grow flex flex-col md:flex-row">
