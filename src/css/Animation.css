@@ -25,3 +25,18 @@
     opacity: 1;
   }
 }
+
+.MessageOut {
+  animation: MessageOut 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) reverse both;
+}
+
+@keyframes MessageOut {
+  0% {
+    transform: rotateX(80deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0);
+    opacity: 1;
+  }
+}

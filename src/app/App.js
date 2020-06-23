@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import '../css/App.css';
 
 import Navbar from './components/navbar/Navbar';
 import mainRoutes from './routes/main_routes';

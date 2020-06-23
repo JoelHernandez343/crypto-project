@@ -15,14 +15,18 @@ export default function MainSection({ messageQueue }) {
     );
     const filesToAdd = files.filter((file, index) => areFiles[index]);
 
-    if (!areFiles.reduce((prev, current) => prev & current, true)) {
-      messageQueue.add({
-        title: 'No se pueden agregar carpetas.',
-        message:
-          'Se intentaron agregar carpetas, pero esta característica no está soportada.',
-        style: 'error',
-      });
-    }
+    areFiles.reduce((prev, current) => prev & current, true)
+      ? messageQueue.add({
+          title: 'Todos los archivos se agregaron correctamente.',
+          message: 'Los archivos seleccionados fueron agregados correctamente.',
+          style: 'success',
+        })
+      : messageQueue.add({
+          title: 'No se pueden agregar carpetas.',
+          message:
+            'Se intentaron agregar carpetas, pero esta característica no está soportada.',
+          style: 'error',
+        });
 
     setStageFiles(prev => Array.from(new Set([...prev, ...filesToAdd])));
   };
