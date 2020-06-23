@@ -3,7 +3,7 @@ import Message from './Message';
 
 export default function MessageContainer({ information }) {
   return (
-    <div className="z-20 flex justify-center absolute left-0 right-0 mx-auto bottom-0 mb-4">
+    <div className="z-20 flex justify-center absolute left-0 right-0 mx-auto bottom-0 mb-4 w-0 bg-black">
       <Message information={information} />
     </div>
   );

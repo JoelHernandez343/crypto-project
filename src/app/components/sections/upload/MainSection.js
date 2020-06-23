@@ -27,7 +27,7 @@ const filterStagedFiles = (files, stagedFiles) =>
 
 const filterProtectedFiles = (files, protectedFiles, messageQueue) =>
   files.filter(file => {
-    let isProtected = protectedFiles.includes(file);
+    let isProtected = protectedFiles.filter(f => f.path === file).length === 1;
 
     if (isProtected) {
       messageQueue.add({
@@ -87,14 +87,17 @@ export default function MainSection({ messageQueue }) {
   const removeAllFiles = () => setStagedFiles([]);
 
   const addProtectedFiles = files => {
-    setProtectedFiles(stagedFiles);
+    setProtectedFiles(prev => [
+      ...prev,
+      ...stagedFiles.map(f => ({ path: f, encrypted: false })),
+    ]);
     removeAllFiles();
   };
 
   return (
-    <div className="w-full flex-grow flex flex-col md:flex-row">
-      <div className="w-full flex flex-col">
-        <div className="flex-grow flex">
+    <div className="w-full flex-grow flex flex-col lg:flex-row min-h-full">
+      <div className="lg:w-0 flex-grow flex flex-col">
+        <div className="flex-grow flex pb-5">
           <DragAndDrop
             addFiles={addFiles}
             stagedFiles={stagedFiles}
@@ -106,14 +109,20 @@ export default function MainSection({ messageQueue }) {
         <div
           className={`${
             stagedFiles.length === 0 ? 'hidden' : ''
-          } w-full flex flex-col p-5`}
+          } w-full flex flex-col px-5 pb-5`}
         >
-          <MainButton content="Proteger" />
+          <MainButton content="Proteger" onClick={addProtectedFiles} />
         </div>
       </div>
-      <div className="bg-green-400 w-full hidden">
-        <p>Hello world</p>
-      </div>
+      {protectedFiles.length === 0 ? (
+        ''
+      ) : (
+        <div className="lg:w-0 flex-grow rounded bg-gray-200 shadow flex">
+          <div className="w-0 flex-grow p-5">
+            <p>Hello world</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

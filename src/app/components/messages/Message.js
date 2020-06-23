@@ -38,13 +38,16 @@ export default function Message({
         <span className="mdi mdi-information-outline text-2xl"></span>
       </div>
       <div className="flex-grow max-w-lg flex flex-col text-left">
-        <div className="quicksand font-bold">{title}</div>
-        <div className="quicksand font-medium text-sm break-words">
+        <div className="quicksand font-bold truncate">{title}</div>
+        <div
+          className="quicksand font-medium text-sm break-words"
+          style={{ width: '30rem' }}
+        >
           {message}
         </div>
       </div>
       <div className="w-3 flex-shrink-0 flex items-start justify-center">
-        <div className="cursor-pointer" onClick={close}>
+        <div className="cursor-pointer px-2" onClick={close}>
           <span className="mdi mdi-close pointer-events-none"></span>
         </div>
       </div>

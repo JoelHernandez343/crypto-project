@@ -17,7 +17,7 @@ export default function UploadSection({ view, messageQueue }) {
         </h2>
       </div>
 
-      <div className="flex-grow py-10 md:px-10 lg:px-16 xl:px-32 flex ">
+      <div className="flex-grow py-10 md:px-10 lg:px-16 xl:px-32 flex">
         <MainSection messageQueue={messageQueue} />
       </div>
     </div>

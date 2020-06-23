@@ -47,13 +47,18 @@ export default function DragAndDrop({
   };
 
   return (
-    <div className="w-full flex-grow rounded bg-gray-200 shadow p-4 flex justify-center items-center flex-col max-h-full">
-      <ListOfFiles
-        visible={!initial}
-        stagedFiles={stagedFiles}
-        removeFile={removeFile}
-        removeAllFiles={removeAllFiles}
-      />
+    <div className="w-full flex-grow rounded bg-gray-200 shadow p-4 flex justify-center items-center flex-col ">
+      {initial ? (
+        ''
+      ) : (
+        <div className="w-full flex-grow flex h-56">
+          <ListOfFiles
+            files={stagedFiles}
+            removeFile={removeFile}
+            removeAllFiles={removeAllFiles}
+          />
+        </div>
+      )}
 
       <div
         className={`${

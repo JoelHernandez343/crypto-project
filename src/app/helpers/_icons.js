@@ -10,8 +10,7 @@ const font = 'format-letter-case-upper';
 const zip = 'folder-zip-outline';
 const code = 'code-json';
 
-const icons = new Map();
-icons
+const icons = new Map()
   .set('jpeg', image)
   .set('png', image)
   .set('jpg', image)
@@ -41,8 +40,4 @@ icons
   .set('vhd', code)
   .set('others', others);
 
-export default function getIcon(name) {
-  let ext = name.substring(name.lastIndexOf('.') + 1);
-
-  return name === ext || !icons.has(ext) ? icons.get('others') : icons.get(ext);
-}
+export { icons };
