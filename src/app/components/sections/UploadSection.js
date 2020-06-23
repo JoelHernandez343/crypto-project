@@ -1,7 +1,7 @@
 import React from 'react';
 import MainSection from './upload/MainSection';
 
-export default function UploadSection({ view, showMessage }) {
+export default function UploadSection({ view, messageQueue }) {
   return (
     <div
       className={`${
@@ -18,7 +18,7 @@ export default function UploadSection({ view, showMessage }) {
       </div>
 
       <div className="flex-grow py-10 md:px-10 lg:px-16 xl:px-32 flex ">
-        <MainSection showMessage={showMessage} />
+        <MainSection messageQueue={messageQueue} />
       </div>
     </div>
   );

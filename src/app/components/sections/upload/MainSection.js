@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import DragAndDrop from "./DragAndDrop";
-import MainButton from "./../../buttons/MainButton";
+import React, { useState } from 'react';
+import DragAndDrop from './DragAndDrop';
+import MainButton from './../../buttons/MainButton';
 
 /*global _node*/
 
-export default function MainSection({ showMessage }) {
+export default function MainSection({ messageQueue }) {
   const [stageFiles, setStageFiles] = useState([]);
 
   const getIsFile = async file => (await _node.fsAsync.lstat(file)).isFile();
@@ -16,12 +16,11 @@ export default function MainSection({ showMessage }) {
     const filesToAdd = files.filter((file, index) => areFiles[index]);
 
     if (!areFiles.reduce((prev, current) => prev & current, true)) {
-      showMessage({
-        title: "No se pueden agregar carpetas.",
+      messageQueue.add({
+        title: 'No se pueden agregar carpetas.',
         message:
-          "Se intentaron agregar carpetas, pero esta característica no está soportada.",
-        style: "error",
-        display: true,
+          'Se intentaron agregar carpetas, pero esta característica no está soportada.',
+        style: 'error',
       });
     }
 
@@ -31,6 +30,8 @@ export default function MainSection({ showMessage }) {
   const removeFile = file =>
     setStageFiles(prev => prev.filter(f => f !== file));
 
+  const removeAllFiles = () => setStageFiles([]);
+
   return (
     <div className="w-full flex-grow flex flex-col md:flex-row">
       <div className="w-full flex flex-col">
@@ -39,12 +40,13 @@ export default function MainSection({ showMessage }) {
             addFiles={addFiles}
             stageFiles={stageFiles}
             removeFile={removeFile}
+            removeAllFiles={removeAllFiles}
             initial={stageFiles.length === 0}
           />
         </div>
         <div
           className={`${
-            stageFiles.length === 0 ? "hidden" : ""
+            stageFiles.length === 0 ? 'hidden' : ''
           } w-full flex flex-col p-5`}
         >
           <MainButton content="Proteger" />

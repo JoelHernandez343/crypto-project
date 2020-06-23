@@ -5,6 +5,9 @@ import Navbar from './components/navbar/Navbar';
 import mainRoutes from './routes/main_routes';
 import Topbar from './components/Topbar';
 import MessageContainer from './components/messages/MessageContainer';
+import MessageQueue from './helpers/MessageQueue';
+
+const messageQueue = new MessageQueue();
 
 function App() {
   const [section, setSection] = useState('upload');
@@ -18,13 +21,12 @@ function App() {
       <s.renderer
         key={`section-${s.section}`}
         view={s.section === section}
-        showMessage={showMessage}
+        messageQueue={messageQueue}
       />
     ));
 
   const [messageInfo, setMessageInfo] = useState({ display: false });
-  const closeMessage = () => setMessageInfo({ display: false });
-  const showMessage = info => setMessageInfo(info);
+  messageQueue.triggerer = setMessageInfo;
 
   return (
     <div className="text-center flex min-h-screen select-none min-w-screen scroll">
@@ -35,7 +37,7 @@ function App() {
           {buildSections(section)}
         </div>
         {messageInfo.display ? (
-          <MessageContainer close={closeMessage} info={messageInfo} />
+          <MessageContainer information={messageInfo} />
         ) : (
           ''
         )}

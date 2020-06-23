@@ -11,29 +11,29 @@ const setStyle = style =>
     ? errorStyle
     : defaultStyle;
 
-export default function Message({ info, close }) {
+export default function Message({ information }) {
   useEffect(() => {
-    const timer = setTimeout(() => close(), 5000);
+    const timer = setTimeout(() => information.closeFunction(), 5000);
     return () => clearTimeout(timer);
-  }, [close]);
+  }, [information]);
 
   return (
     <div
       className={`${setStyle(
-        info.style
-      )} border-t-4 rounded-b px-4 py-3 shadow-md flex`}
+        information.style
+      )} border-t-4 rounded-b px-4 pt-3 pb-6 shadow-md flex MessageIn`}
     >
       <div className="w-10 flex-shrink-0 flex items-start justify-center">
         <span className="mdi mdi-information-outline text-2xl"></span>
       </div>
       <div className="flex-grow max-w-lg flex flex-col text-left">
-        <div className="quicksand font-bold">{info.title}</div>
+        <div className="quicksand font-bold">{information.title}</div>
         <div className="quicksand font-medium text-sm break-words">
-          {info.message}
+          {information.message}
         </div>
       </div>
       <div className="w-3 flex-shrink-0 flex items-start justify-center">
-        <div className="cursor-pointer" onClick={close}>
+        <div className="cursor-pointer" onClick={information.closeFunction}>
           <span className="mdi mdi-close pointer-events-none"></span>
         </div>
       </div>

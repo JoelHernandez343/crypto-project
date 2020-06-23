@@ -1,7 +1,13 @@
 import React from 'react';
 import FileItem from './FileItem';
+import CloseAllButton from '../../buttons/CloseAllButton';
 
-export default function ListOfFiles({ visible, stageFiles, removeFile }) {
+export default function ListOfFiles({
+  visible,
+  stageFiles,
+  removeFile,
+  removeAllFiles,
+}) {
   const buildFileList = files =>
     files.map(file => (
       <FileItem key={file} file={file} removeFile={removeFile} />
@@ -11,9 +17,14 @@ export default function ListOfFiles({ visible, stageFiles, removeFile }) {
     <div
       className={`${
         visible ? '' : 'hidden'
-      } flex-grow bg-gray-200 w-full h-56 overflow-y-auto scroll p-1`}
+      } w-full flex-grow flex h-56 flex-col`}
     >
-      {buildFileList(stageFiles)}
+      <div className="flex-shrink-0 flex justify-end">
+        <CloseAllButton onClick={removeAllFiles} />
+      </div>
+      <div className="flex-grow bg-gray-200 w-full overflow-y-auto scroll p-1">
+        {buildFileList(stageFiles)}
+      </div>
     </div>
   );
 }

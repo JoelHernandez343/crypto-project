@@ -6,6 +6,7 @@ export default function DragAndDrop({
   addFiles,
   stageFiles,
   removeFile,
+  removeAllFiles,
   initial,
 }) {
   const addVisualEffect = e =>
@@ -51,6 +52,7 @@ export default function DragAndDrop({
         visible={!initial}
         stageFiles={stageFiles}
         removeFile={removeFile}
+        removeAllFiles={removeAllFiles}
       />
 
       <div
