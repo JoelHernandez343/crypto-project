@@ -9,6 +9,16 @@ const consoleIcon = 'console';
 const font = 'format-letter-case-upper';
 const zip = 'folder-zip-outline';
 const code = 'code-json';
+const adobe = 'adobe';
+const vector = 'vector-curve';
+const java = 'language-java';
+const javascript = 'language-javascript';
+const json = 'code-json';
+const video = 'video';
+const ebook = 'book-open-outline';
+const exe = 'application';
+const ico = 'duck';
+const md = 'language-markdown';
 
 const icons = new Map()
   .set('jpeg', image)
@@ -38,6 +48,20 @@ const icons = new Map()
   .set('c', code)
   .set('cpp', code)
   .set('vhd', code)
+  .set('psd', adobe)
+  .set('svg', vector)
+  .set('ai', vector)
+  .set('java', java)
+  .set('js', javascript)
+  .set('json', json)
+  .set('mp4', video)
+  .set('azw', ebook)
+  .set('Mobi', ebook)
+  .set('kf8', ebook)
+  .set('prc', ebook)
+  .set('exe', exe)
+  .set('ico', ico)
+  .set('md', md)
   .set('others', others);
 
 export { icons };
