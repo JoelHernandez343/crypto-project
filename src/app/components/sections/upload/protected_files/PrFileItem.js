@@ -10,14 +10,14 @@ export default function FileItem({ file, removeFile, encrypt }) {
 
   const setInProgress = isInProgress => setDisabled(isInProgress);
 
-  const setTotalEncrypted = () => {
-    file.encrypted = true;
-    setEncrypted(true);
-  };
-
   useEffect(() => {
-    encrypt.add(file.path, setInProgress, setTotalEncrypted);
-  }, [file.path, encrypt]);
+    const setFinished = () => {
+      file.encrypted = true;
+      setEncrypted(true);
+    };
+
+    encrypt.add(file.path, setInProgress, setFinished);
+  }, [file, encrypt]);
 
   return (
     <div className="w-full h-10 flex bg-gray-200 my-1 hover:bg-indigo-500 hover:bg-opacity-25 transition ease-in-out duration-150 text-gray-600">
