@@ -2,6 +2,20 @@ import React from 'react';
 import ListOfFiles from './ListOfFiles';
 /*global _node */
 
+const addVisualEffect = e => e.classList.add('bg-indigo-500', 'bg-opacity-25');
+
+const removeVisualEffect = e =>
+  e.classList.remove('bg-indigo-500', 'bg-opacity-25');
+
+const onDragEnter = e => addVisualEffect(e.target);
+
+const onDragLeave = e => removeVisualEffect(e.target);
+
+const rf = e => {
+  e.preventDefault();
+  e.stopPropagation();
+};
+
 export default function DragAndDrop({
   addFiles,
   stagedFiles,
@@ -9,21 +23,6 @@ export default function DragAndDrop({
   removeAllFiles,
   initial,
 }) {
-  const addVisualEffect = e =>
-    e.classList.add('bg-indigo-500', 'bg-opacity-25');
-
-  const removeVisualEffect = e =>
-    e.classList.remove('bg-indigo-500', 'bg-opacity-25');
-
-  const rf = e => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const onDragEnter = e => addVisualEffect(e.target);
-
-  const onDragLeave = e => removeVisualEffect(e.target);
-
   const onDrop = e => {
     removeVisualEffect(e.target);
 
@@ -47,7 +46,7 @@ export default function DragAndDrop({
   };
 
   return (
-    <div className="w-full flex-grow rounded bg-gray-200 shadow p-4 flex justify-center items-center flex-col ">
+    <div className="w-full flex-grow rounded bg-gray-200 shadow p-4 flex justify-center items-center flex-col">
       {initial ? (
         ''
       ) : (
@@ -62,7 +61,7 @@ export default function DragAndDrop({
 
       <div
         className={`${
-          initial ? 'flex-grow flex-col' : 'h-20'
+          initial ? 'flex-grow flex-col h-64' : 'h-20'
         } flex items-center justify-center w-full relative`}
       >
         <div

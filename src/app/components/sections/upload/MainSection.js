@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DragAndDrop from './DragAndDrop';
 import MainButton from './../../buttons/MainButton';
+import ListOfFiles from './ListOfFiles';
 
 import { getFileName, getIsFile } from '../../../helpers/FileHelper';
 
@@ -41,7 +42,7 @@ const filterProtectedFiles = (files, protectedFiles, messageQueue) =>
     return !isProtected;
   });
 
-export default function MainSection({ messageQueue }) {
+export default function MainSection({ messageQueue, encrypt }) {
   const [stagedFiles, setStagedFiles] = useState([]);
   const [protectedFiles, setProtectedFiles] = useState([]);
 
@@ -51,6 +52,7 @@ export default function MainSection({ messageQueue }) {
     if (files.length === 0) return;
 
     const notStagedFiles = filterStagedFiles(files, stagedFiles);
+
     const filesToAdd = filterProtectedFiles(
       notStagedFiles,
       protectedFiles,
@@ -82,11 +84,11 @@ export default function MainSection({ messageQueue }) {
   };
 
   const removeFile = file =>
-    setStagedFiles(prev => prev.filter(f => f !== file));
+    setStagedFiles(stagedFiles.filter(f => f !== file));
 
   const removeAllFiles = () => setStagedFiles([]);
 
-  const addProtectedFiles = files => {
+  const addProtectedFiles = () => {
     setProtectedFiles(prev => [
       ...prev,
       ...stagedFiles.map(f => ({ path: f, encrypted: false })),
@@ -94,10 +96,22 @@ export default function MainSection({ messageQueue }) {
     removeAllFiles();
   };
 
+  const removeProtectedFile = file =>
+    setProtectedFiles(protectedFiles.filter(p => p.path !== file.path));
+
+  const removeAllProtectedFiles = () => {
+    encrypt.cancelAll();
+    setProtectedFiles([]);
+  };
+
   return (
     <div className="w-full flex-grow flex flex-col lg:flex-row min-h-full">
-      <div className="lg:w-0 flex-grow flex flex-col">
-        <div className="flex-grow flex pb-5">
+      <div
+        className={`${
+          protectedFiles.length === 0 ? '' : 'lg:mr-5'
+        } lg:w-0 flex-grow flex flex-col`}
+      >
+        <div className="flex-grow flex">
           <DragAndDrop
             addFiles={addFiles}
             stagedFiles={stagedFiles}
@@ -109,7 +123,7 @@ export default function MainSection({ messageQueue }) {
         <div
           className={`${
             stagedFiles.length === 0 ? 'hidden' : ''
-          } w-full flex flex-col px-5 pb-5`}
+          } w-full flex flex-col px-5 pt-5`}
         >
           <MainButton content="Proteger" onClick={addProtectedFiles} />
         </div>
@@ -117,9 +131,17 @@ export default function MainSection({ messageQueue }) {
       {protectedFiles.length === 0 ? (
         ''
       ) : (
-        <div className="lg:w-0 flex-grow rounded bg-gray-200 shadow flex">
-          <div className="w-0 flex-grow p-5">
-            <p>Hello world</p>
+        <div className="lg:w-0 flex-grow rounded bg-gray-200 shadow flex mt-5 lg:mt-0">
+          <div className="w-full p-4 flex flex-col">
+            <div className="w-full flex-grow flex h-64">
+              <ListOfFiles
+                files={protectedFiles}
+                removeFile={removeProtectedFile}
+                removeAllFiles={removeAllProtectedFiles}
+                stage={false}
+                encrypt={encrypt}
+              />
+            </div>
           </div>
         </div>
       )}

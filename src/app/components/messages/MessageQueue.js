@@ -1,4 +1,4 @@
-class QueueMessage {
+class MessageQueue {
   constructor() {
     this.queue = [];
     this.setMessageInfo = () => 'Not implemented yet!';
@@ -11,7 +11,7 @@ class QueueMessage {
 
   add(information) {
     this.queue.push(() => {
-      new Promise((resolve, reject) => {
+      new Promise(resolve => {
         information.display = true;
         information.closeFunction = () =>
           resolve(this.setMessageInfo({ display: false }));
@@ -26,12 +26,11 @@ class QueueMessage {
 
   dequeue() {
     this.running = this.queue.shift();
-    if (this.running) {
-      this.running();
-    }
+
+    if (this.running) this.running();
 
     return this.running;
   }
 }
 
-export default QueueMessage;
+export { MessageQueue };

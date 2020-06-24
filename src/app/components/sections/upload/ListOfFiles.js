@@ -8,13 +8,19 @@ export default function ListOfFiles({
   removeFile,
   removeAllFiles,
   stage = true,
+  encrypt,
 }) {
   const buildFileList = files =>
     files.map(file =>
       stage ? (
         <FileItem key={file} file={file} removeFile={removeFile} />
       ) : (
-        <PrFileItem />
+        <PrFileItem
+          key={`protected-${file.path}`}
+          file={file}
+          removeFile={removeFile}
+          encrypt={encrypt}
+        />
       )
     );
 

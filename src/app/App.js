@@ -4,9 +4,11 @@ import Navbar from './components/navbar/Navbar';
 import mainRoutes from './routes/main_routes';
 import Topbar from './components/Topbar';
 import MessageContainer from './components/messages/MessageContainer';
-import MessageQueue from './helpers/MessageQueue';
+import { MessageQueue } from './components/messages/MessageQueue';
+import { EncryptQueue } from './components/sections/upload/protected_files/EncryptQueue';
 
 const messageQueue = new MessageQueue();
+const encrypt = new EncryptQueue();
 
 function App() {
   const [section, setSection] = useState('upload');
@@ -21,6 +23,7 @@ function App() {
         key={`section-${s.section}`}
         view={s.section === section}
         messageQueue={messageQueue}
+        encrypt={s.section === 'upload' ? encrypt : undefined}
       />
     ));
 
@@ -28,7 +31,7 @@ function App() {
   messageQueue.triggerer = setMessageInfo;
 
   return (
-    <div className="text-center flex min-h-screen select-none min-w-screen scroll">
+    <div className="text-center flex min-h-screen select-none min-w-screen scroll overflow-hidden">
       <Navbar changeSection={setSection} />
       <div className="flex-grow flex flex-col w-0 relative">
         <Topbar />
