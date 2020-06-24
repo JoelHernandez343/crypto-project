@@ -2,8 +2,8 @@ import React from 'react';
 /*global _node*/
 
 export default function Topbar() {
-  const minimize = () => _node.remote.getCurrentWindow().minimize();
-  const close = () => _node.remote.getCurrentWindow().close();
+  const minimize = () => _node.minimize();
+  const close = () => _node.close();
 
   return (
     <div className="h-6 z-10 flex drag bg-gray-300 justify-end w-full items-center">

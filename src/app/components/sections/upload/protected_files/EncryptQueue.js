@@ -1,6 +1,7 @@
+/*global _node*/
+
 class EncryptQueue {
   constructor() {
-    console.log('Hello');
     this.queue = [];
     this.running = false;
     this.canIrun = true;
@@ -11,27 +12,23 @@ class EncryptQueue {
     this.allCanceled = false;
 
     const cb = function () {
-      new Promise((resolve, reject) => {
+      new Promise(async (resolve, reject) => {
+        this.allCanceled
+          ? reject('All the encrypt events were cancelled!')
+          : setInProgress(true);
+
+        const output = await _node.encrypt(file);
+
+        console.log(`File ${file} encrypted at ${output}`);
+
+        this.allCanceled
+          ? reject('All the encrypt events were cancelled!')
+          : setInProgress(false);
+
         if (this.allCanceled) reject('All the encrypt events were cancelled!');
+        setEncrypted(true);
 
-        setInProgress(true);
-
-        /* Encrypt here */
-        setTimeout(() => {
-          console.log(`Archivo ${file} ya encriptado!`);
-
-          if (this.allCanceled)
-            reject('All the encrypt events were cancelled!');
-
-          setInProgress(false);
-
-          if (this.allCanceled)
-            reject('All the encrypt events were cancelled!');
-
-          setEncrypted(true);
-
-          resolve();
-        }, 1500);
+        resolve(output);
       })
         .then(() => this.dequeue())
         .catch(error => console.log(error));

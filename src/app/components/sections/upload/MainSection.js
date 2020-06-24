@@ -5,6 +5,8 @@ import ListOfFiles from './ListOfFiles';
 
 import { getFileName, getIsFile } from '../../../helpers/FileHelper';
 
+/*global _node*/
+
 const filterFolders = async (paths, messageQueue) => {
   let filter = await Promise.all(
     paths.map(async file => await getIsFile(file))
@@ -99,7 +101,8 @@ export default function MainSection({ messageQueue, encrypt }) {
   const removeProtectedFile = file =>
     setProtectedFiles(protectedFiles.filter(p => p.path !== file.path));
 
-  const removeAllProtectedFiles = () => {
+  const removeAllProtectedFiles = async () => {
+    await _node.initTmpDir();
     encrypt.cancelAll();
     setProtectedFiles([]);
   };

@@ -8,6 +8,6 @@ const getIcon = name => {
 };
 
 const getFileName = file => file.replace(/.*[\\/]/, '');
-const getIsFile = async file => (await _node.fsAsync.lstat(file)).isFile();
+const getIsFile = async path => await _node.getIsFile(path);
 
 export { getFileName, getIsFile, getIcon };

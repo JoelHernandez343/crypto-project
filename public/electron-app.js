@@ -1,12 +1,16 @@
-// Importamos app y la clase BrowserWindow de electron
-const { app, BrowserWindow } = require('electron');
-
-// Importamos la utilidad path
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const crypto = require('crypto');
 const path = require('path');
+const fs = require('fs');
 
-// Callback que se ejecutará cuando la aplicación este lista
+const { AESencrypt } = require('./electron/crypto');
+
+const key = crypto.randomBytes(32);
+const iv = crypto.randomBytes(16);
+
+let window;
+
 const createWindow = () => {
-
   let options = {
     width: 1000,
     height: 680,
@@ -14,22 +18,44 @@ const createWindow = () => {
     minHeigth: 470,
     frame: false,
     useContentSize: true,
-    // Permitimos que el proceso Render acceda a la API de node directamente.
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true
-    }
-  }
+    },
+  };
 
-  let window = new BrowserWindow(options);
+  window = new BrowserWindow(options);
 
-  // Si la aplicación no está empaquetada, usamos el servidor interno de React.
-  // Si está empaquetada, cargamos el index.html
   window.loadURL(
-    !app.isPackaged ?
-      'http://localhost:3000' :
-      `file://${path.join(__dirname, 'index.html')}`
-  )
-}
+    !app.isPackaged
+      ? 'http://localhost:3000'
+      : `file://${path.join(__dirname, 'index.html')}`
+  );
+};
 
 app.whenReady().then(createWindow);
+
+ipcMain.handle('initTmpDir', async (event, folder) => {
+  const dest = path.join('public', folder);
+
+  fs.rmdirSync(dest, { recursive: true }, err => console.log(err));
+  fs.mkdirSync(dest);
+});
+
+ipcMain.handle('openFileDialog', async (event, ...args) => {
+  const r = await dialog.showOpenDialog({
+    properties: ['openFile', 'multiSelections'],
+  });
+
+  return r.filePaths;
+});
+
+ipcMain.handle('minimize', async () => window.minimize());
+
+ipcMain.handle('close', async () => window.close());
+
+ipcMain.handle(
+  'encrypt',
+  async (event, file) => await AESencrypt(file, key, iv)
+);
+
+ipcMain.handle('getIsFile', async (event, path) => fs.lstatSync(path).isFile());

@@ -39,10 +39,8 @@ export default function DragAndDrop({
   };
 
   const onClick = async () => {
-    const files = await _node.dialog.showOpenDialog({
-      properties: ['openFile', 'multiSelections'],
-    });
-    changeState(files.filePaths);
+    const files = await _node.fileDialog();
+    changeState(files);
   };
 
   return (

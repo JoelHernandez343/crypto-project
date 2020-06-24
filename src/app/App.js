@@ -10,6 +10,9 @@ import { EncryptQueue } from './components/sections/upload/protected_files/Encry
 const messageQueue = new MessageQueue();
 const encrypt = new EncryptQueue();
 
+/*global _node*/
+_node.initTmpDir();
+
 function App() {
   const [section, setSection] = useState('upload');
 

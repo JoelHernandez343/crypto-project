@@ -26,3 +26,6 @@ yarn-error.log*
 /src/css/tailwind.generated.css
 /src/fonts/materialdesignicons-webfont*
 /src/css/materialdesignicons.min.css
+
+# electron
+public/tmp
