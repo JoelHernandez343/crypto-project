@@ -7,7 +7,7 @@ const Files = ['/home/marbrehi/Escritorio/hola.txt'];
 
 export default function MainSection() {
   return (
-    <div className="w-full flex-grow flex flex-col lg:flex-row min-h-full">
+    <div className="w-full flex-grow flex flex-col min-h-full">
       <div className=" items-center justify-center">
         <DestinyButton
           content="Seleccionar destino"
@@ -17,7 +17,7 @@ export default function MainSection() {
       {Files.length === 0 ? (
         ''
       ) : (
-        <div className="lg:w-0 flex-grow rounded bg-gray-200 shadow flex mt-5 lg:mt-0">
+        <div className=" flex-grow rounded bg-gray-200 shadow flex mt-5">
           <div className="w-full p-4 flex flex-col">
             <div className="w-full flex-grow flex h-64">
               <ListOfFiles
