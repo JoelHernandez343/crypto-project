@@ -3,7 +3,30 @@ import DestinyButton from './../../buttons/DestinyButton';
 import ListOfFiles from '../upload/ListOfFiles';
 
 const openFileSelector = () => {};
-const Files = ['/home/marbrehi/Escritorio/hola.txt'];
+const files = [
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola (3° copia).txt',
+  '/home/marbrehi/Escritorio/hola (3° copia)(3° copia).txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+  '/home/marbrehi/Escritorio/hola.txt',
+];
 
 export default function MainSection() {
   return (
@@ -14,18 +37,14 @@ export default function MainSection() {
           onClick={openFileSelector}
         />
       </div>
-      {Files.length === 0 ? (
+      {files.length === 0 ? (
         ''
       ) : (
         <div className=" flex-grow rounded bg-gray-200 shadow flex mt-5">
           <div className="w-full p-4 flex flex-col">
             <div className="w-full flex-grow flex h-64">
               <ListOfFiles
-                files={[
-                  '/home/marbrehi/Escritorio/hola.txt',
-                  '/home/marbrehi/Escritorio/hola (3° copia).txt',
-                  '/home/marbrehi/Escritorio/hola (3° copia)(3° copia).txt',
-                ]}
+                files={files}
                 downloadFile={() => {}}
                 state="download"
               />
