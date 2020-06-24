@@ -138,7 +138,7 @@ export default function MainSection({ messageQueue, encrypt }) {
                 files={protectedFiles}
                 removeFile={removeProtectedFile}
                 removeAllFiles={removeAllProtectedFiles}
-                stage={false}
+                state="protected"
                 encrypt={encrypt}
               />
             </div>

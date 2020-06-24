@@ -2,10 +2,22 @@ import React from 'react';
 import { getFileName, getIcon } from '../../../../helpers/FileHelper';
 
 import CloseButton from '../../../buttons/CloseButton';
+import DownloadButton from '../../../buttons/DownloadButton';
 
 const buildIcon = file => (
   <span className={`mdi mdi-${getIcon(getFileName(file))}`}></span>
 );
+
+const renderCloseIcon = (file, removeFile) =>
+  removeFile ? (
+    <div className="w-16 flex-shrink-0 flex items-center justify-center">
+      <CloseButton onClick={() => removeFile(file)} />
+    </div>
+  ) : (
+    <div className="w-16 flex-shrink-0 flex items-center justify-center">
+      <DownloadButton onClick={() => removeFile(file)} />
+    </div>
+  );
 
 export default function FileItem({ file, removeFile }) {
   return (
@@ -19,9 +31,7 @@ export default function FileItem({ file, removeFile }) {
         </p>
         <p className="quicksand font-semibold text-xs truncate">{file}</p>
       </div>
-      <div className="w-16 flex-shrink-0 flex items-center justify-center">
-        <CloseButton onClick={() => removeFile(file)} />
-      </div>
+      {renderCloseIcon(file, removeFile)}
     </div>
   );
 }
