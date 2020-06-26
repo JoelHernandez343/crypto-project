@@ -8,12 +8,11 @@ const others = 'text-box-outline';
 const consoleIcon = 'console';
 const font = 'format-letter-case-upper';
 const zip = 'folder-zip-outline';
-const code = 'code-json';
+const json = 'code-json';
 const adobe = 'adobe';
 const vector = 'vector-curve';
 const java = 'language-java';
 const javascript = 'language-javascript';
-const json = 'code-json';
 const video = 'video';
 const ebook = 'book-open-outline';
 const exe = 'application';
@@ -42,7 +41,6 @@ const icons = new Map()
   .set('zip', zip)
   .set('rar', zip)
   .set('gz', zip)
-  .set('js', code)
   .set('css', code)
   .set('html', code)
   .set('c', code)
@@ -53,7 +51,7 @@ const icons = new Map()
   .set('ai', vector)
   .set('java', java)
   .set('js', javascript)
-  .set('json', json)
+  .set('json', code)
   .set('mp4', video)
   .set('azw', ebook)
   .set('Mobi', ebook)
