@@ -5,27 +5,8 @@ import ListOfFiles from '../upload/ListOfFiles';
 const openFileSelector = () => {};
 const files = [
   '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
   '/home/marbrehi/Escritorio/hola (3° copia).txt',
   '/home/marbrehi/Escritorio/hola (3° copia)(3° copia).txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
-  '/home/marbrehi/Escritorio/hola.txt',
 ];
 
 export default function MainSection() {

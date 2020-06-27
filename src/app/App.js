@@ -34,7 +34,10 @@ function App() {
   messageQueue.triggerer = setMessageInfo;
 
   return (
-    <div className="text-center flex min-h-screen select-none min-w-screen scroll overflow-hidden">
+    <div
+      className="text-center flex min-h-screen select-none min-w-screen scroll overflow-hidden"
+      onClick={() => console.log('Hello world')}
+    >
       <Navbar changeSection={setSection} />
       <div className="flex-grow flex flex-col w-0 relative">
         <Topbar />
