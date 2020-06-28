@@ -1,5 +1,5 @@
 const { app, BrowserWindow } = require('electron');
-const { handleInitialize } = require('./electron/handle-events');
+const { handleInitialize } = require('./code/handle-events');
 const path = require('path');
 
 let window;

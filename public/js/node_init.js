@@ -10,6 +10,8 @@ const getIsFile = async path => await ipcRenderer.invoke('getIsFile', path);
 
 const encrypt = async file => await ipcRenderer.invoke('encrypt', file);
 
+const signIn = async () => await ipcRenderer.invoke('googleSignIn');
+
 const _node = {
   fileDialog,
   initTmpDir,
@@ -17,4 +19,5 @@ const _node = {
   close,
   getIsFile,
   encrypt,
+  signIn,
 };

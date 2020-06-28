@@ -1,9 +1,10 @@
 const fsAsync = require('fs').promises;
 const path = require('path');
 const ElectronGoogleOAuth2 = require('@getstation/electron-google-oauth2');
-const { Console } = require('console');
 
-const OAUTH_PATH = path.join('public', 'oauth');
+const OAUTH_PATH = path.join('electron', 'oauth');
+
+let oauth_server;
 
 const SCOPES = [
   'https://www.googleapis.com/auth/userinfo.email',
@@ -11,14 +12,6 @@ const SCOPES = [
   'https://www.googleapis.com/auth/drive.file',
   'https://www.googleapis.com/auth/drive.appdata',
 ];
-
-const initTokenDirectory = async () => {
-  try {
-    await fsAsync.mkdir(OAUTH_PATH, { recursive: true });
-  } catch (err) {
-    console.error(err);
-  }
-};
 
 const credentials = async () =>
   JSON.parse(
@@ -28,13 +21,15 @@ const credentials = async () =>
   );
 
 const getToken = (client_id, client_secret, scopes) => {
-  const oauth = new ElectronGoogleOAuth2.default(
-    client_id,
-    client_secret,
-    scopes
-  );
+  if (!oauth_server) {
+    oauth_server = new ElectronGoogleOAuth2.default(
+      client_id,
+      client_secret,
+      scopes
+    );
+  }
 
-  return oauth.openAuthWindowAndGetTokens();
+  return oauth_server.openAuthWindowAndGetTokens();
 };
 
 const googleLogIn = async () => {
@@ -47,6 +42,7 @@ const googleLogIn = async () => {
   try {
     token = await getToken(client_id, client_secret, [...SCOPES]);
   } catch (err) {
+    console.log(err);
     return 'Ocurrió un error desconocido mientras se hacia la validación con Google.';
   }
 
@@ -73,5 +69,4 @@ const googleLogIn = async () => {
   return true;
 };
 
-module.exports.initTokenDirectory = initTokenDirectory;
 module.exports.googleLogIn = googleLogIn;

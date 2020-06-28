@@ -2,13 +2,11 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 
+const DEST_PATH = path.join('electron', 'tmp');
+
 const AESencrypt = (file, key, iv) =>
   new Promise((resolve, reject) => {
-    let output = path.join(
-      'public',
-      'tmp',
-      `${file.replace(/^.*[\\\/]/, '')}.crp`
-    );
+    let output = path.join(DEST_PATH, `${file.replace(/^.*[\\\/]/, '')}.crp`);
 
     let w = fs.createWriteStream(output);
     let r = fs.createReadStream(file, { encoding: null });

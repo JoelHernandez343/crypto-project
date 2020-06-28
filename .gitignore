@@ -28,8 +28,8 @@ yarn-error.log*
 /src/css/materialdesignicons.min.css
 
 # electron
-public/tmp
+electron/tmp
 
 # Google oauth
-public/oauth/**/*
-!public/oauth/credentials.json
+electron/oauth/**/*
+!electron/oauth/credentials.json

@@ -11,7 +11,7 @@ const iv = crypto.randomBytes(16);
 
 const handleInitialize = window => {
   ipcMain.handle('initTmpDir', async (event, folder) => {
-    const dest = path.join('public', folder);
+    const dest = path.join('electron', folder);
 
     fs.rmdirSync(dest, { recursive: true }, err => console.log(err));
     fs.mkdirSync(dest);
@@ -37,6 +37,9 @@ const handleInitialize = window => {
   ipcMain.handle('getIsFile', async (event, path) =>
     fs.lstatSync(path).isFile()
   );
+
+  // Google oauth
+  ipcMain.handle('googleSignIn', async () => await oauth.googleLogIn());
 };
 
 module.exports.handleInitialize = handleInitialize;
