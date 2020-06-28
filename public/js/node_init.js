@@ -10,7 +10,13 @@ const getIsFile = async path => await ipcRenderer.invoke('getIsFile', path);
 
 const encrypt = async file => await ipcRenderer.invoke('encrypt', file);
 
-const signIn = async () => await ipcRenderer.invoke('googleSignIn');
+const loadLocalImage = async (image, ext) =>
+  await ipcRenderer.invoke('loadLocalImage', image, ext);
+
+const logSession = async () => await ipcRenderer.invoke('logSession');
+const loadSession = async () => await ipcRenderer.invoke('loadSession');
+const closeSession = async () => await ipcRenderer.invoke('closeSession');
+const defaultUser = async () => await ipcRenderer.invoke('defaultUser');
 
 const _node = {
   fileDialog,
@@ -19,5 +25,9 @@ const _node = {
   close,
   getIsFile,
   encrypt,
-  signIn,
+  logSession,
+  loadLocalImage,
+  loadSession,
+  closeSession,
+  defaultUser,
 };

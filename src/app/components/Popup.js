@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import SignButton from './buttons/SignButton';
-
-/*global _node*/
+import { closeSession, logSession } from './../helpers/session';
 
 const renderMessage = status =>
   status === 'disconnected' ? (
@@ -28,13 +27,26 @@ const setButtonContent = status =>
     <>Cerrar sesión</>
   );
 
-export default function Popup({ show, status, setStatus, messageQueue }) {
+export default function Popup({
+  show,
+  messageQueue,
+  setSession,
+  session: { status },
+}) {
   const [cancel, setCancel] = useState({ cb() {} });
+
+  const updateStatus = status =>
+    setSession(prev => ({
+      name: prev.name,
+      email: prev.email,
+      image: prev.image,
+      status,
+    }));
 
   const signIn = async () => {
     let promiseSignIn = () =>
       new Promise((resolve, reject) => {
-        _node.signIn().then(resolve).catch(reject);
+        logSession().then(resolve).catch(reject);
         setCancel({
           cb() {
             resolve('Operación cancelada por el usuario');
@@ -42,34 +54,34 @@ export default function Popup({ show, status, setStatus, messageQueue }) {
         });
       });
 
-    setStatus('loading');
+    updateStatus('loading');
 
     let resolve = await promiseSignIn();
 
     setCancel({ cb() {} });
 
-    if (resolve === true) {
-      console.log('aver');
+    if (typeof resolve !== 'string') {
+      setSession(resolve);
 
       messageQueue.add({
         title: 'Se inició la sesión exitosamente',
         message: 'La sesión de Google Drive se ha iniciado correctamente',
         style: 'success',
       });
-      setStatus('goifdgkjoidf');
+      updateStatus('connected');
     } else {
       messageQueue.add({
         title: 'Ha ocurrido un error',
         message: resolve,
         style: 'error',
       });
-      setStatus('disconnected');
+      updateStatus('disconnected');
     }
   };
 
   const signOut = () => {
-    /*Se cierra sesion aqui */
-    setStatus('disconnected');
+    closeSession(setSession);
+
     messageQueue.add({
       title: 'Sesión cerrada',
       message: 'Se cerró sesión con éxito.',

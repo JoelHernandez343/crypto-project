@@ -1,8 +1,21 @@
-const fsAsync = require('fs').promises;
-const path = require('path');
 const ElectronGoogleOAuth2 = require('@getstation/electron-google-oauth2');
+const fsAsync = require('fs').promises;
+const { google } = require('googleapis');
+const path = require('path');
+
+const {
+  readJSON,
+  writeDirAndJSON,
+  loadLocalImage,
+} = require('../helpers/utils');
+const { getPersonalInfo, saveProfilePic } = require('./profile');
 
 const OAUTH_PATH = path.join('electron', 'oauth');
+const CREDENTIALS_PATH = path.join(OAUTH_PATH, 'credentials.json');
+const OAUTH_USER = path.join(OAUTH_PATH, 'user');
+const TOKEN_FILE = path.join(OAUTH_USER, 'token.json');
+const USER_INFO = path.join(OAUTH_USER, 'information.json');
+const USER_PIC = path.join(OAUTH_USER, 'picture');
 
 let oauth_server;
 
@@ -13,14 +26,11 @@ const SCOPES = [
   'https://www.googleapis.com/auth/drive.appdata',
 ];
 
-const credentials = async () =>
-  JSON.parse(
-    await fsAsync.readFile(path.join(OAUTH_PATH, 'credentials.json'), {
-      encoding: 'utf8',
-    })
-  );
+const getCredentials = async () => readJSON(CREDENTIALS_PATH);
 
-const getToken = (client_id, client_secret, scopes) => {
+const getToken = async () => readJSON(TOKEN_FILE);
+
+const googleLogIn = (client_id, client_secret, scopes) => {
   if (!oauth_server) {
     oauth_server = new ElectronGoogleOAuth2.default(
       client_id,
@@ -32,41 +42,97 @@ const getToken = (client_id, client_secret, scopes) => {
   return oauth_server.openAuthWindowAndGetTokens();
 };
 
-const googleLogIn = async () => {
+const getNewToken = async credentials => {
   const {
     installed: { client_id, client_secret },
-  } = await credentials();
-
-  let token;
+  } = credentials;
 
   try {
-    token = await getToken(client_id, client_secret, [...SCOPES]);
+    const token = await googleLogIn(client_id, client_secret, [...SCOPES]);
+    const allowed = token.scope.split(' ');
+    const blocked = SCOPES.filter(s => !allowed.includes(s));
+
+    if (blocked.length !== 0)
+      return blocked.reduce((m, b) => {
+        let name = b.slice(b.lastIndexOf('/') + 1);
+
+        return `${m}<br>${name}`;
+      }, 'Los siguientes permisos no fueron autorizados:');
+
+    await writeDirAndJSON(token, OAUTH_USER, 'token.json');
+
+    return token;
   } catch (err) {
     console.log(err);
+
     return 'Ocurrió un error desconocido mientras se hacia la validación con Google.';
   }
-
-  const allowed = token.scope.split(' ');
-  const blocked = SCOPES.filter(s => !allowed.includes(s));
-
-  if (blocked.length != 0)
-    return blocked.reduce((m, b) => {
-      let name = b.slice(b.lastIndexOf('/') + 1);
-
-      return `${m}\n${name}`;
-    }, 'Los siguientes permisos no fueron autorizados:');
-
-  await fsAsync.writeFile(
-    path.join(OAUTH_PATH, 'token.json'),
-    JSON.stringify(token),
-    {
-      encoding: 'utf8',
-    }
-  );
-
-  console.log('Se guardó el archivo tokens.js');
-
-  return true;
 };
 
-module.exports.googleLogIn = googleLogIn;
+const defaultUser = async () => ({
+  name: 'No ha ingresado',
+  email: 'Ingrese a Google Drive',
+  image: await loadLocalImage(
+    path.join(OAUTH_PATH, 'default_profile.jpg'),
+    'jpg'
+  ),
+  status: 'disconnected',
+});
+
+const logSession = async () => {
+  const credentials = await getCredentials();
+
+  const token = await getNewToken(credentials);
+  if (typeof token === 'string') return token;
+
+  const {
+    installed: { client_id, client_secret, redirect_uris },
+  } = credentials;
+
+  console.log(redirect_uris[0]);
+
+  const auth = new google.auth.OAuth2(
+    client_id,
+    client_secret,
+    redirect_uris[0]
+  );
+  auth.setCredentials(token);
+
+  let info = (await getPersonalInfo(auth)).data;
+
+  await saveProfilePic(info, USER_PIC);
+  info.pictureFile = USER_PIC;
+
+  await writeDirAndJSON(info, OAUTH_USER, 'information.json');
+
+  return {
+    name: info.name,
+    email: info.email,
+    image: await loadLocalImage(USER_PIC, 'jpg'),
+  };
+};
+
+const loadSession = async () => {
+  try {
+    const info = await readJSON(USER_INFO);
+
+    return {
+      name: info.name,
+      email: info.email,
+      image: await loadLocalImage(pictureFile, 'jpg'),
+    };
+  } catch (err) {
+    console.log(err);
+    return await defaultUser();
+  }
+};
+
+const closeSession = async () =>
+  await fsAsync.rmdir(OAUTH_USER, { recursive: true });
+
+module.exports = {
+  logSession,
+  loadSession,
+  closeSession,
+  defaultUser,
+};

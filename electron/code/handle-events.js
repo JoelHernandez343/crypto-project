@@ -3,8 +3,14 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 
-const oauth = require('./google-oauth/google-oauth');
+const {
+  logSession,
+  loadSession,
+  closeSession,
+  defaultUser,
+} = require('./google-oauth/google-oauth');
 const { AESencrypt } = require('./crypto/crypto');
+const { loadLocalImage } = require('./helpers/utils');
 
 const key = crypto.randomBytes(32);
 const iv = crypto.randomBytes(16);
@@ -38,8 +44,16 @@ const handleInitialize = window => {
     fs.lstatSync(path).isFile()
   );
 
+  ipcMain.handle(
+    'loadLocalImage',
+    async (event, image, ext) => await loadLocalImage(image, ext)
+  );
+
   // Google oauth
-  ipcMain.handle('googleSignIn', async () => await oauth.googleLogIn());
+  ipcMain.handle('logSession', async () => await logSession());
+  ipcMain.handle('loadSession', async () => await loadSession());
+  ipcMain.handle('closeSession', async () => await closeSession());
+  ipcMain.handle('defaultUser', async () => await defaultUser());
 };
 
 module.exports.handleInitialize = handleInitialize;

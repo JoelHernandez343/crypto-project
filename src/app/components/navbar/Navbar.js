@@ -4,7 +4,7 @@ import mainRoutes from '../../routes/main_routes';
 import Item from './Item';
 import User from './User';
 
-export default function Navbar({ changeSection, userClick, user }) {
+export default function Navbar({ changeSection, userClick, session }) {
   const [active, setActive] = useState(0);
 
   const menu = mainRoutes.map(({ section, navInfo: { icon, title } }) => ({
@@ -32,7 +32,7 @@ export default function Navbar({ changeSection, userClick, user }) {
 
   return (
     <nav className="flex-shrink-0 w-16 md:w-64 bg-gray-200 z-20 h-screen overflow-y-auto scroll">
-      <User user={user} userClick={userClick} />
+      <User session={session} userClick={userClick} />
       <ul>{buildList(active)}</ul>
     </nav>
   );

@@ -8,13 +8,11 @@ import { MessageQueue } from './components/messages/MessageQueue';
 import { EncryptQueue } from './components/sections/upload/protected_files/EncryptQueue';
 import Popup from './components/Popup';
 
+// Initialization
 const messageQueue = new MessageQueue();
 const encrypt = new EncryptQueue();
 
-/*global _node*/
-_node.initTmpDir();
-
-function App() {
+export default function App({ initialUser }) {
   const [section, setSection] = useState('upload');
 
   const sections = mainRoutes.map(route => ({
@@ -49,26 +47,23 @@ function App() {
     hidePopup();
   };
 
-  const [user, setUser] = useState({
-    name: 'No ha ingresado',
-    email: 'Ingrese a Google Drive',
-    profile:
-      'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
-  });
-
-  const [status, setStatus] = useState('disconnected');
+  const [session, setSession] = useState(initialUser);
 
   return (
     <div
       className="text-center flex min-h-screen select-none min-w-screen scroll overflow-hidden relative"
       onClick={appPopup}
     >
-      <Navbar changeSection={setSection} userClick={toggPopup} user={user} />
+      <Navbar
+        changeSection={setSection}
+        userClick={toggPopup}
+        session={session}
+      />
       <Popup
         show={popup}
-        setStatus={setStatus}
-        status={status}
         messageQueue={messageQueue}
+        session={session}
+        setSession={setSession}
       />
       <div className="flex-grow flex flex-col w-0 relative">
         <Topbar />
@@ -84,5 +79,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

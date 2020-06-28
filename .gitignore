@@ -31,5 +31,5 @@ yarn-error.log*
 electron/tmp
 
 # Google oauth
-electron/oauth/**/*
-!electron/oauth/credentials.json
+electron/oauth/token.json
+electron/oauth/user/**/*
