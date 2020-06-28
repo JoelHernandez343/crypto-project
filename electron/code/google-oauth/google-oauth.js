@@ -119,7 +119,7 @@ const loadSession = async () => {
     return {
       name: info.name,
       email: info.email,
-      image: await loadLocalImage(pictureFile, 'jpg'),
+      image: await loadLocalImage(info.pictureFile, 'jpg'),
     };
   } catch (err) {
     console.log(err);
