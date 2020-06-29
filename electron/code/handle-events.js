@@ -7,7 +7,7 @@ const {
   closeSession,
   defaultUser,
 } = require('./google-api/google-oauth');
-const { protect } = require('./crypto/crypto');
+const { protect, DECRYPT_PATH, UPLOAD_PATH } = require('./crypto/crypto');
 const { loadLocalImage, removeFile } = require('./helpers/utils');
 
 function handleInitialize(window) {

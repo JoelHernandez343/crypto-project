@@ -2,6 +2,8 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 
+const { separateDirAndName } = require('../helpers/utils');
+
 const iv = stringToBuffer('36d6b93416b72e989359a5f0b73defd');
 const publicKey = stringToBuffer(
   '30818902818100cd8eece87cc7ae82dd6cb91a7c4465e18e7b097eba6ce468d3d1c8c2ef1d9cf7a2992d6e081fb37618373670ca1f591d46044334add6eb24fd7e1f5b5b5f60c6709e02696f4d5a788eb8b83011beae3d145e79e6992160859b948adda56b0fbdedf1264dbdc39d90a7be26ee38bc138f6d28fbab00b25f781ac7d835b2877dd90203010101'
@@ -85,8 +87,19 @@ function stringToBuffer(string) {
   return Buffer.from(string, 'hex');
 }
 
-function RSA_OPRF(file) {
-  return hash(file);
+async function RSA_OPRF(file) {
+  return await hash(file);
 }
 
-module.exports = {};
+async function protect(file) {
+  const key = await RSA_OPRF(file);
+  const output = await AESencrypt(file, key);
+  const pHash = bufferToString(await hash(output));
+  const pKey = bufferToString(await RSAencrypt(key, publicKey));
+
+  const { dir, name } = output;
+
+  return { outDir: dir, outName: name, pKey, pHash };
+}
+
+module.exports = { protect, UPLOAD_PATH, DECRYPT_PATH };

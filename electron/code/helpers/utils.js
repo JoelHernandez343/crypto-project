@@ -52,6 +52,13 @@ async function removeFile({ fullPath, dir, name }) {
     : await fsAsync.unlink(path.join(dir, name));
 }
 
+function separateDirAndName(fullPath) {
+  let name = fullPath.replace(/^.*[\\\/]/, '');
+  let dir = fullPath.replace(new RegExp(`${name}$`));
+
+  return { dir, name };
+}
+
 module.exports = {
   readJSON,
   writeJSON,
@@ -59,4 +66,5 @@ module.exports = {
   loadLocalImage,
   fetchImage,
   removeFile,
+  separateDirAndName,
 };
