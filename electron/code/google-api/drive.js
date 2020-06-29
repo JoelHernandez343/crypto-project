@@ -137,7 +137,6 @@ function listFiles() {
                 id: file.id,
                 name: file.name,
                 hash: file.properties.hash,
-                isKey: file.properties.isKey,
               }))
             );
       }
@@ -168,7 +167,6 @@ function listOnlyFiles() {
                 id: file.id,
                 name: file.name,
                 hash: file.properties.hash,
-                isKey: file.properties.isKey,
               }))
             );
       }
@@ -193,6 +191,28 @@ function searchFiles(hashString) {
         const files = res.data.files;
 
         return !files.length ? resolve(undefined) : resolve(files);
+      }
+    );
+  });
+}
+
+function searchForKey(hashString) {
+  return new Promise((resolve, reject) => {
+    if (!authentification.auth) reject('No has iniciado sesión.');
+
+    const drive = google.drive({ version: 'v3', auth: authentification.auth });
+
+    drive.files.list(
+      {
+        q: `properties has { key='hash' and value='${hashString}'} and properties has {key='isKey' and value ='true'}`,
+        spaces: 'appDataFolder',
+        fields: 'nextPageToken, files(id,name,properties)',
+      },
+      (err, res) => {
+        if (err) reject(err);
+        const files = res.data.files;
+
+        return !files.length ? resolve(undefined) : resolve(files[0]);
       }
     );
   });

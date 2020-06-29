@@ -1,7 +1,7 @@
 import React from 'react';
 import MainSection from './download/MainSection';
 
-export default function DownloadSection({ view }) {
+export default function DownloadSection({ session, view, messageQueue }) {
   return (
     <div
       className={`${
@@ -18,7 +18,7 @@ export default function DownloadSection({ view }) {
       </div>
 
       <div className="flex-grow py-10 md:px-10 xl:px-32 flex">
-        <MainSection />
+        <MainSection messageQueue={messageQueue} session={session} />
       </div>
     </div>
   );

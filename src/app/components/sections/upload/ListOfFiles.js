@@ -2,6 +2,7 @@ import React from 'react';
 import FileItem from './staged_files/FileItem';
 import PrFileItem from './protected_files/PrFileItem';
 import CloseAllButton from '../../buttons/CloseAllButton';
+import DownloadItem from './../download/DownloadItem';
 
 const renderCloseButton = (state, removeAllFiles, enabledRemoveAll) =>
   state === 'stage' || state === 'protected' ? (
@@ -37,7 +38,7 @@ const renderItem = (
       enableRemAll={enableRemAll}
     />
   ) : (
-    <FileItem key={file} file={file} />
+    <DownloadItem key={file.id} file={file} />
   );
 };
 

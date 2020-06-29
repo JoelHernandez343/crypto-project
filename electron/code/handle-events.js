@@ -16,7 +16,7 @@ const {
   loadRSAPaths,
 } = require('./crypto/crypto');
 
-const { postFile } = require('./google-api/drive');
+const { postFile, listOnlyFiles } = require('./google-api/drive');
 
 const { loadLocalImage, removeFile } = require('./helpers/utils');
 
@@ -67,6 +67,14 @@ function handleInitialize(window) {
   ipcMain.handle('loadRSAPaths', async () => await loadRSAPaths());
 
   ipcMain.handle('uploadFile', async (event, file) => await postFile(file));
+
+  ipcMain.handle('listOnlyFiles', async () => {
+    try {
+      return await listOnlyFiles();
+    } catch (err) {
+      return err;
+    }
+  });
 }
 
 module.exports.handleInitialize = handleInitialize;
