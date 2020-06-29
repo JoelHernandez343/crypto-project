@@ -1,7 +1,7 @@
 import React from 'react';
 import DestinyButton from './../../buttons/DestinyButton';
 import ListOfFiles from '../upload/ListOfFiles';
-import { uploadFile } from './../../../helpers/up_file';
+import { uploadFile } from './../../../helpers/drive';
 
 const openFileSelector = () => {};
 const files = [
