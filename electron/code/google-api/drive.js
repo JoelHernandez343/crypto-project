@@ -137,7 +137,7 @@ function listFiles() {
                 id: file.id,
                 name: file.name,
                 hash: file.properties.hash,
-                key: file.properties.key,
+                isKey: file.properties.isKey,
               }))
             );
       }
@@ -168,7 +168,7 @@ function listOnlyFiles() {
                 id: file.id,
                 name: file.name,
                 hash: file.properties.hash,
-                key: file.properties.key,
+                isKey: file.properties.isKey,
               }))
             );
       }
