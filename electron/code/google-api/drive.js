@@ -141,4 +141,11 @@ function searchFiles(hashString) {
   });
 }
 
-module.exports = {};
+module.exports = {
+  uploadFile,
+  downloadFile,
+  deleteFile,
+  deleteAllFiles,
+  listFiles,
+  searchFiles,
+};
