@@ -1,5 +1,5 @@
 import React from 'react';
-import { getFileName, getIcon } from '../../../../helpers/FileHelper';
+import { getFileName, getIcon } from '../../../../helpers/files';
 
 import CloseButton from '../../../buttons/CloseButton';
 import DownloadButton from '../../../buttons/DownloadButton';

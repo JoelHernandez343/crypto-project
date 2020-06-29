@@ -32,7 +32,7 @@ export default function App({ initialUser }) {
   const [messageInfo, setMessageInfo] = useState({ display: false });
   messageQueue.triggerer = setMessageInfo;
 
-  const [popup, setPopup] = useState(true);
+  const [popup, setPopup] = useState(false);
 
   const hidePopup = () => setPopup(false);
   const toggPopup = () => setPopup(p => !p);

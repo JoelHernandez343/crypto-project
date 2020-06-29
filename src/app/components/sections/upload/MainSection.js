@@ -3,7 +3,11 @@ import DragAndDrop from './DragAndDrop';
 import MainButton from './../../buttons/MainButton';
 import ListOfFiles from './ListOfFiles';
 
-import { getFileName, getIsFile } from '../../../helpers/FileHelper';
+import {
+  getFileName,
+  getIsFile,
+  removeFile as rmf,
+} from '../../../helpers/files';
 
 /*global _node*/
 
@@ -93,16 +97,19 @@ export default function MainSection({ messageQueue, encrypt }) {
   const addProtectedFiles = () => {
     setProtectedFiles(prev => [
       ...prev,
-      ...stagedFiles.map(f => ({ path: f, encrypted: false })),
+      ...stagedFiles.map(f => ({ path: f, isEncrypted: false, output: '' })),
     ]);
     removeAllFiles();
   };
 
-  const removeProtectedFile = file =>
+  const removeProtectedFile = async file => {
+    if (file.isEncrypted) await rmf(file.output);
+
     setProtectedFiles(protectedFiles.filter(p => p.path !== file.path));
+  };
 
   const removeAllProtectedFiles = async () => {
-    await _node.initTmpDir();
+    await _node.initTmpDirs();
     encrypt.cancelAll();
     setProtectedFiles([]);
   };

@@ -6,7 +6,7 @@ let window;
 
 const createWindow = () => {
   let options = {
-    width: 1000,
+    width: 1100,
     height: 680,
     minWidth: 570,
     minHeigth: 470,

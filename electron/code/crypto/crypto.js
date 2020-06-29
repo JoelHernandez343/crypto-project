@@ -2,11 +2,12 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 
-const DEST_PATH = path.join('electron', 'tmp');
+const UPLOAD_PATH = path.join('electron', 'tmpToUpload');
+const DECRYPT_PATH = path.join('electron', 'tmpToDecrypt');
 
-const AESencrypt = (file, key, iv) =>
-  new Promise((resolve, reject) => {
-    let output = path.join(DEST_PATH, `${file.replace(/^.*[\\\/]/, '')}.crp`);
+function AESencrypt(file, key, iv) {
+  return new Promise((resolve, reject) => {
+    let output = path.join(UPLOAD_PATH, `${file.replace(/^.*[\\\/]/, '')}.crp`);
 
     let w = fs.createWriteStream(output);
     let r = fs.createReadStream(file, { encoding: null });
@@ -24,5 +25,10 @@ const AESencrypt = (file, key, iv) =>
     r.on('end', () => resolve(output));
     r.on('error', () => reject);
   });
+}
 
-module.exports.AESencrypt = AESencrypt;
+module.exports = {
+  AESencrypt,
+  UPLOAD_PATH,
+  DECRYPT_PATH,
+};

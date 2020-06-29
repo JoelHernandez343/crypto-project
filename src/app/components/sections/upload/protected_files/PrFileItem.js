@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import CloseButton from '../../../buttons/CloseButton';
 
-import { getFileName } from '../../../../helpers/FileHelper';
+import { getFileName } from '../../../../helpers/files';
 
 export default function FileItem({ file, removeFile, encrypt }) {
   const [disabled, setDisabled] = useState(false);
@@ -11,8 +11,10 @@ export default function FileItem({ file, removeFile, encrypt }) {
   const setInProgress = isInProgress => setDisabled(isInProgress);
 
   useEffect(() => {
-    const setFinished = () => {
-      file.encrypted = true;
+    const setFinished = output => {
+      file.isEncrypted = true;
+      file.output = output;
+
       setEncrypted(true);
     };
 
@@ -37,7 +39,8 @@ export default function FileItem({ file, removeFile, encrypt }) {
       <div className="w-16 flex-shrink-0 flex items-center justify-center">
         <CloseButton
           onClick={() => {
-            encrypt.cancel(file.path);
+            if (!file.isEncrypted) encrypt.cancel(file.path);
+
             removeFile(file);
           }}
           disabled={disabled}

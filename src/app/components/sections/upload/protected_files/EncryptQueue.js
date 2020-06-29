@@ -8,7 +8,7 @@ class EncryptQueue {
     this.allCanceled = false;
   }
 
-  add(file, setInProgress, setEncrypted) {
+  add(file, setInProgress, setFinished) {
     this.allCanceled = false;
 
     const cb = function () {
@@ -18,15 +18,15 @@ class EncryptQueue {
           : setInProgress(true);
 
         const output = await _node.encrypt(file);
-
         console.log(`File ${file} encrypted at ${output}`);
 
         this.allCanceled
           ? reject('All the encrypt events were cancelled!')
           : setInProgress(false);
 
-        if (this.allCanceled) reject('All the encrypt events were cancelled!');
-        setEncrypted(true);
+        this.allCanceled
+          ? reject('All the encrypt events were cancelled!')
+          : setFinished(output);
 
         resolve(output);
       })

@@ -1,12 +1,13 @@
 const { ipcRenderer } = require('electron');
 
-const initTmpDir = async () => await ipcRenderer.invoke('initTmpDir', 'tmp');
+const initTmpDirs = async () => await ipcRenderer.invoke('initTmpDirs');
 
 const fileDialog = async () => await ipcRenderer.invoke('openFileDialog');
 const minimize = async () => ipcRenderer.invoke('minimize');
 const close = async () => ipcRenderer.invoke('close');
 
 const getIsFile = async path => await ipcRenderer.invoke('getIsFile', path);
+const removeFile = async path => await ipcRenderer.invoke('removeFile', path);
 
 const encrypt = async file => await ipcRenderer.invoke('encrypt', file);
 
@@ -21,7 +22,7 @@ const uploadFile = async () => await ipcRenderer.invoke('uploadFile');
 
 const _node = {
   fileDialog,
-  initTmpDir,
+  initTmpDirs,
   minimize,
   close,
   getIsFile,
@@ -32,4 +33,5 @@ const _node = {
   closeSession,
   defaultUser,
   uploadFile,
+  removeFile,
 };

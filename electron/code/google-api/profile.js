@@ -1,8 +1,8 @@
 const { google } = require('googleapis');
 const { fetchImage } = require('../helpers/utils');
 
-const getPersonalInfo = auth =>
-  new Promise((resolve, reject) => {
+function getPersonalInfo(auth) {
+  return new Promise((resolve, reject) => {
     const oauth2 = google.oauth2({
       auth,
       version: 'v2',
@@ -10,8 +10,11 @@ const getPersonalInfo = auth =>
 
     oauth2.userinfo.get((err, res) => (err ? reject(err) : resolve(res)));
   });
+}
 
-const saveProfilePic = ({ picture }, path) => fetchImage(picture, path);
+function saveProfilePic({ picture }, path) {
+  return fetchImage(picture, path);
+}
 
 module.exports = {
   getPersonalInfo,

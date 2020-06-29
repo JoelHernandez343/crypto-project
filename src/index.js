@@ -11,7 +11,7 @@ import { loadSession } from './app/helpers/session';
 /*global _node */
 
 (async () => {
-  await _node.initTmpDir();
+  await _node.initTmpDirs();
 
   ReactDOM.render(
     <React.StrictMode>
