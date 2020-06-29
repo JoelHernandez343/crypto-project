@@ -132,27 +132,36 @@ export default function MainSection({ messageQueue, encrypt }) {
         </div>
         <div
           className={`${
-            stagedFiles.length === 0 ? 'hidden' : ''
+            stagedFiles.length !== 0 ? 'hidden' : ''
           } w-full flex flex-col px-5 pt-5`}
         >
           <MainButton content="Proteger" onClick={addProtectedFiles} />
         </div>
       </div>
-      {protectedFiles.length === 0 ? (
+      {protectedFiles.length !== 0 ? (
         ''
       ) : (
-        <div className="lg:w-0 flex-grow rounded bg-gray-200 shadow flex mt-5 lg:mt-0">
-          <div className="w-full p-4 flex flex-col">
-            <div className="w-full flex-grow flex h-64">
-              <ListOfFiles
-                files={protectedFiles}
-                removeFile={removeProtectedFile}
-                removeAllFiles={removeAllProtectedFiles}
-                state="protected"
-                encrypt={encrypt}
-              />
+        <div className="lg:w-0 flex-grow flex flex-col">
+          <div className="flex-grow rounded bg-gray-200 shadow flex mt-5 lg:mt-0">
+            <div className="w-full p-4 flex flex-col">
+              <div className="w-full flex-grow flex h-64">
+                <ListOfFiles
+                  files={protectedFiles}
+                  removeFile={removeProtectedFile}
+                  removeAllFiles={removeAllProtectedFiles}
+                  state="protected"
+                  encrypt={encrypt}
+                />
+              </div>
             </div>
           </div>
+          {false ? (
+            ''
+          ) : (
+            <div className="w-full flex flex-col px-5 pt-5">
+              <MainButton content="Subir" onClick={() => {}} enabled={false} />
+            </div>
+          )}
         </div>
       )}
     </div>
