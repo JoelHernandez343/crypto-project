@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
+const { dialog } = require('electron');
 
 const { separateDirAndName } = require('../helpers/utils');
 
@@ -14,6 +15,8 @@ const privateKey = stringToBuffer(
 
 const UPLOAD_PATH = path.join('electron', 'tmpToUpload');
 const DECRYPT_PATH = path.join('electron', 'tmpToDecrypt');
+
+let PUBLIC_KEY_PATH, PRIVATE_KEY_PATH;
 
 function AESencrypt(file, key) {
   return new Promise((resolve, reject) => {
@@ -79,6 +82,61 @@ function hash(file) {
   });
 }
 
+async function loadRSAPaths() {
+  const public = (
+    await dialog.showOpenDialog({
+      properties: ['openFile', 'multiSelections'],
+    })
+  ).filePaths[0];
+
+  if (!public) return 'No se seleccionó ningún archivo';
+
+  const private = (
+    await dialog.showOpenDialog({
+      properties: ['openFile', 'multiSelections'],
+    })
+  ).filePaths[0];
+
+  if (!private) return 'No se seleccionó ningún archivo';
+
+  try {
+    const msj = '36d6b93416b72e989359a5f0b73defae';
+    const enc = RSA1024encrypt(stringToBuffer(msj), public);
+    const dec = RSA1024decrypt(stringToBuffer(enc), private);
+
+    if (msj != dec) return 'Archivos inválidos.';
+
+    PUBLIC_KEY_PATH = public;
+    PRIVATE_KEY_PATH = private;
+
+    return true;
+  } catch (err) {
+    return 'Archivos inválidos';
+  }
+}
+
+function RSA1024encrypt(toEncrypt, localPathPublic) {
+  const absolutePath = path.resolve(localPathPublic);
+  const publicKey = fs.readFileSync(absolutePath, 'utf8');
+  const encrypted = crypto.publicEncrypt(publicKey, toEncrypt);
+
+  return bufferToString(encrypted);
+}
+
+function RSA1024decrypt(toDecrypt, localPathPrivate) {
+  const absolutePath = path.resolve(localPathPrivate);
+  const privateKey = fs.readFileSync(absolutePath, 'utf8');
+
+  const decrypted = crypto.privateDecrypt(
+    {
+      key: privateKey.toString(),
+      passphrase: '',
+    },
+    toDecrypt
+  );
+  return bufferToString(decrypted);
+}
+
 function bufferToString(buffer) {
   return buffer.toString('hex');
 }
@@ -102,4 +160,4 @@ async function protect(file) {
   return { outDir: dir, outName: name, pKey, pHash };
 }
 
-module.exports = { protect, UPLOAD_PATH, DECRYPT_PATH };
+module.exports = { protect, UPLOAD_PATH, DECRYPT_PATH, loadRSAPaths };

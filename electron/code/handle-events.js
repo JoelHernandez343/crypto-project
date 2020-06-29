@@ -52,6 +52,8 @@ function handleInitialize(window) {
   ipcMain.handle('loadSession', async () => await loadSession());
   ipcMain.handle('closeSession', async () => await closeSession());
   ipcMain.handle('defaultUser', async () => await defaultUser());
+
+  ipcMain.handle('loadRSAPaths', async () => await loadRSAPaths());
 }
 
 module.exports.handleInitialize = handleInitialize;
