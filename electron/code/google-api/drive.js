@@ -16,6 +16,7 @@ function uploadFile(dir, name, key, hash) {
       parents: ['appDataFolder'],
       properties: {
         hash: `${hash}`,
+        isKey: false,
       },
     };
 
@@ -48,6 +49,7 @@ function uploadKeyFile(name, hash, key) {
       parents: ['appDataFolder'],
       properties: {
         hash: `${hash}`,
+        isKey: true,
       },
     };
 
@@ -143,6 +145,37 @@ function listFiles() {
   });
 }
 
+function listOnlyFiles() {
+  return new Promise((resolve, reject) => {
+    if (!authentification.auth) reject('No has iniciado sesión.');
+
+    const drive = google.drive({ version: 'v3', auth: authentification.auth });
+
+    drive.files.list(
+      {
+        q: `properties has { key='isKey' and value='false'}`,
+        spaces: 'appDataFolder',
+        fields: 'nextPageToken, files(id,name,properties)',
+      },
+      (err, res) => {
+        if (err) reject(err);
+        const files = res.data.files;
+
+        return !files.length
+          ? resolve([])
+          : resolve(
+              files.map(file => ({
+                id: file.id,
+                name: file.name,
+                hash: file.properties.hash,
+                key: file.properties.key,
+              }))
+            );
+      }
+    );
+  });
+}
+
 function searchFiles(hashString) {
   return new Promise((resolve, reject) => {
     if (!authentification.auth) reject('No has iniciado sesión.');
@@ -186,6 +219,7 @@ module.exports = {
   deleteFile,
   deleteAllFiles,
   listFiles,
+  listOnlyFiles,
   searchFiles,
   postFile,
 };
