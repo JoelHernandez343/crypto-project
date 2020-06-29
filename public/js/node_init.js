@@ -7,9 +7,10 @@ const minimize = async () => ipcRenderer.invoke('minimize');
 const close = async () => ipcRenderer.invoke('close');
 
 const getIsFile = async path => await ipcRenderer.invoke('getIsFile', path);
-const removeFile = async path => await ipcRenderer.invoke('removeFile', path);
+const removeFile = async options =>
+  await ipcRenderer.invoke('removeFile', options);
 
-const encrypt = async file => await ipcRenderer.invoke('encrypt', file);
+const protect = async file => await ipcRenderer.invoke('protect', file);
 
 const loadLocalImage = async (image, ext) =>
   await ipcRenderer.invoke('loadLocalImage', image, ext);
@@ -26,7 +27,7 @@ const _node = {
   minimize,
   close,
   getIsFile,
-  encrypt,
+  protect,
   logSession,
   loadLocalImage,
   loadSession,

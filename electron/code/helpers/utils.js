@@ -46,8 +46,10 @@ function fetchImage(url, localPath) {
   });
 }
 
-async function removeFile(path) {
-  await fsAsync.unlink(path);
+async function removeFile({ fullPath, dir, name }) {
+  return fullPath
+    ? await fsAsync.unlink(fullPath)
+    : await fsAsync.unlink(path.join(dir, name));
 }
 
 module.exports = {

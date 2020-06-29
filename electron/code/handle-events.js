@@ -9,11 +9,8 @@ const {
   closeSession,
   defaultUser,
 } = require('./google-api/google-oauth');
-const { AESencrypt, DECRYPT_PATH, UPLOAD_PATH } = require('./crypto/crypto');
+const { protect } = require('./crypto/crypto');
 const { loadLocalImage, removeFile } = require('./helpers/utils');
-
-const key = crypto.randomBytes(32);
-const iv = crypto.randomBytes(16);
 
 function handleInitialize(window) {
   ipcMain.handle('initTmpDirs', async event => {
@@ -36,10 +33,7 @@ function handleInitialize(window) {
 
   ipcMain.handle('close', async () => window.close());
 
-  ipcMain.handle(
-    'encrypt',
-    async (event, file) => await AESencrypt(file, key, iv)
-  );
+  ipcMain.handle('protect', async (event, file) => await protect(file));
 
   ipcMain.handle('getIsFile', async (event, path) =>
     fs.lstatSync(path).isFile()
@@ -50,7 +44,10 @@ function handleInitialize(window) {
     async (event, image, ext) => await loadLocalImage(image, ext)
   );
 
-  ipcMain.handle('removeFile', async (event, path) => await removeFile(path));
+  ipcMain.handle(
+    'removeFile',
+    async (event, options) => await removeFile(options)
+  );
 
   // Google oauth
   ipcMain.handle('logSession', async () => await logSession());

@@ -11,9 +11,15 @@ export default function FileItem({ file, removeFile, encrypt }) {
   const setInProgress = isInProgress => setDisabled(isInProgress);
 
   useEffect(() => {
-    const setFinished = output => {
+    const setFinished = result => {
       file.isEncrypted = true;
-      file.output = output;
+
+      let { outDir, outName, pKey, pHash } = result;
+
+      file.outDir = outDir;
+      file.outName = outName;
+      file.key = pKey;
+      file.hash = pHash;
 
       setEncrypted(true);
     };

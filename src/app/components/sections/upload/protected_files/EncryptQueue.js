@@ -17,8 +17,7 @@ class EncryptQueue {
           ? reject('All the encrypt events were cancelled!')
           : setInProgress(true);
 
-        const output = await _node.encrypt(file);
-        console.log(`File ${file} encrypted at ${output}`);
+        const output = await _node.protect(file);
 
         this.allCanceled
           ? reject('All the encrypt events were cancelled!')
@@ -28,7 +27,7 @@ class EncryptQueue {
           ? reject('All the encrypt events were cancelled!')
           : setFinished(output);
 
-        resolve(output);
+        resolve();
       })
         .then(() => this.dequeue())
         .catch(error => console.log(error));

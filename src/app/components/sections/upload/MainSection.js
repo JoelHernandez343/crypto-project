@@ -97,13 +97,13 @@ export default function MainSection({ messageQueue, encrypt }) {
   const addProtectedFiles = () => {
     setProtectedFiles(prev => [
       ...prev,
-      ...stagedFiles.map(f => ({ path: f, isEncrypted: false, output: '' })),
+      ...stagedFiles.map(f => ({ path: f, isEncrypted: false })),
     ]);
     removeAllFiles();
   };
 
   const removeProtectedFile = async file => {
-    if (file.isEncrypted) await rmf(file.output);
+    if (file.isEncrypted) await rmf({ dir: file.outDir, name: file.outName });
 
     setProtectedFiles(protectedFiles.filter(p => p.path !== file.path));
   };
