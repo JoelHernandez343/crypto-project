@@ -16,7 +16,12 @@ const {
   loadRSAPaths,
 } = require('./crypto/crypto');
 
-const { postFile, listOnlyFiles } = require('./google-api/drive');
+const {
+  postFile,
+  listOnlyFiles,
+  deleteFile,
+  deleteAllFiles,
+} = require('./google-api/drive');
 
 const { loadLocalImage, removeFile } = require('./helpers/utils');
 
@@ -68,9 +73,22 @@ function handleInitialize(window) {
 
   ipcMain.handle('uploadFile', async (event, file) => await postFile(file));
 
+  ipcMain.handle(
+    'deleteAllFiles',
+    async (event, list) => await deleteAllFiles(list)
+  );
+
   ipcMain.handle('listOnlyFiles', async () => {
     try {
       return await listOnlyFiles();
+    } catch (err) {
+      return err;
+    }
+  });
+
+  ipcMain.handle('deleteFile', async (event, id) => {
+    try {
+      return await deleteFile(id);
     } catch (err) {
       return err;
     }

@@ -21,6 +21,9 @@ const closeSession = async () => await ipcRenderer.invoke('closeSession');
 const defaultUser = async () => await ipcRenderer.invoke('defaultUser');
 const uploadFile = async file => await ipcRenderer.invoke('uploadFile', file);
 const listOnlyFiles = async () => await ipcRenderer.invoke('listOnlyFiles');
+const deleteFile = async id => await ipcRenderer.invoke('deleteFile', id);
+const deleteAllFiles = async list =>
+  await ipcRenderer.invoke('deleteAllFiles', list);
 
 const areRsaKeys = async () => await ipcRenderer.invoke('areRsaKeys');
 const loadRSAPaths = async () => await ipcRenderer.invoke('loadRSAPaths');
@@ -42,4 +45,6 @@ const _node = {
   areRsaKeys,
   loadRSAPaths,
   listOnlyFiles,
+  deleteFile,
+  deleteAllFiles,
 };
