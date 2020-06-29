@@ -92,7 +92,6 @@ function listFiles() {
       {
         spaces: 'appDataFolder',
         fields: 'nextPageToken, files(id,name,properties)',
-        pageSize: 1000,
       },
       (err, res) => {
         if (err) reject(err);
@@ -108,6 +107,35 @@ function listFiles() {
                 key: file.properties.key,
               }))
             );
+      }
+    );
+  });
+}
+
+function searchFiles(hashString) {
+  return new Promise((resolve, reject) => {
+    if (!auth) reject('No has iniciado sesión.');
+
+    const drive = google.drive({ version: 'v3', auth });
+
+    drive.files.list(
+      {
+        q: `properties has { key='hash' and value='${hashString}'}`,
+        spaces: 'appDataFolder',
+        fields: 'nextPageToken, files(id,name,properties)',
+      },
+      (err, res) => {
+        if (err) reject(err);
+        const files = res.data.files;
+
+        return !files.length
+          ? resolve(undefined)
+          : resolve({
+              id: files[0].id,
+              name: files[0].name,
+              hash: files[0].properties.hash,
+              key: files[0].properties.key,
+            });
       }
     );
   });
