@@ -27,8 +27,36 @@ function AESencrypt(file, key, iv) {
   });
 }
 
+function hash(file) {
+  return new Promise((resolve, reject) => {
+    const reader = fs.createReadStream(file);
+    const hash = crypto.createHash('sha256');
+
+    reader.on('readable', () => {
+      // Only one element is going to be produced by the
+      // hash stream.
+      const data = reader.read();
+      if (data) hash.update(data);
+      else {
+        resolve(hash.digest());
+      }
+    });
+  });
+}
+
+function bufferToString(buffer) {
+  return buffer.toString('hex');
+}
+
+function stringToBuffer(string) {
+  return Buffer.from(string, 'hex');
+}
+
 module.exports = {
   AESencrypt,
+  hash,
+  bufferToString,
+  stringToBuffer,
   UPLOAD_PATH,
   DECRYPT_PATH,
 };
