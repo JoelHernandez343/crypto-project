@@ -115,7 +115,7 @@ async function deleteAllFiles(list) {
   return 'All files deleted.';
 }
 
-function listFiles() {
+function listAllFile() {
   return new Promise((resolve, reject) => {
     if (!authentification.auth) reject('No has iniciado sesión.');
 
@@ -238,7 +238,7 @@ module.exports = {
   downloadFile,
   deleteFile,
   deleteAllFiles,
-  listFiles,
+  listAllFile,
   listOnlyFiles,
   searchFiles,
   postFile,
