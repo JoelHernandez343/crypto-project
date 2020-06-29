@@ -3,11 +3,9 @@ import DragAndDrop from './DragAndDrop';
 import MainButton from './../../buttons/MainButton';
 import ListOfFiles from './ListOfFiles';
 
-import {
-  getFileName,
-  getIsFile,
-  removeFile as rmf,
-} from '../../../helpers/files';
+import { getFileName, getIsFile } from '../../../helpers/files';
+
+import { areRsaKeys } from '../../../helpers/rsa';
 
 /*global _node*/
 
@@ -48,7 +46,12 @@ const filterProtectedFiles = (files, protectedFiles, messageQueue) =>
     return !isProtected;
   });
 
-export default function MainSection({ messageQueue, encrypt }) {
+export default function MainSection({
+  messageQueue,
+  protect,
+  upload,
+  session,
+}) {
   const [stagedFiles, setStagedFiles] = useState([]);
   const [protectedFiles, setProtectedFiles] = useState([]);
 
@@ -94,24 +97,66 @@ export default function MainSection({ messageQueue, encrypt }) {
 
   const removeAllFiles = () => setStagedFiles([]);
 
-  const addProtectedFiles = () => {
+  const addProtectedFiles = async () => {
+    if (!(await areRsaKeys())) {
+      messageQueue.add({
+        title: 'No han sido agregadas las llaves',
+        message:
+          'No podemos terminar el proceso de encriptado sin las llaves del cliente.',
+        style: 'error',
+      });
+
+      return;
+    }
+
     setProtectedFiles(prev => [
       ...prev,
-      ...stagedFiles.map(f => ({ path: f, isEncrypted: false })),
+      ...stagedFiles.map(f => ({ path: f, status: 'unprotected' })),
     ]);
     removeAllFiles();
   };
 
-  const removeProtectedFile = async file => {
-    if (file.isEncrypted) await rmf({ dir: file.outDir, name: file.outName });
-
-    setProtectedFiles(protectedFiles.filter(p => p.path !== file.path));
-  };
+  const removeProtectedFile = async file =>
+    setProtectedFiles(() => protectedFiles.filter(p => p.path !== file.path));
 
   const removeAllProtectedFiles = async () => {
     await _node.initTmpDirs();
-    encrypt.cancelAll();
+    protect.cancelAll();
     setProtectedFiles([]);
+  };
+
+  const updateAllProtectedFiles = (status, prevStatus) =>
+    setProtectedFiles(prev =>
+      prev.map(f => {
+        if (f.status === prevStatus) f.status = status;
+        return f;
+      })
+    );
+
+  const uploadFiles = () => {
+    console.log(session);
+
+    if (session.status !== 'connected') {
+      messageQueue.add({
+        title: 'No ha iniciado sesión',
+        message: 'Inicie sesión en Google Drive para continuar',
+        style: 'error',
+      });
+
+      return;
+    }
+
+    updateAllProtectedFiles('pending', 'protected');
+  };
+
+  const [enabledRemProAll, setEnabledRemProAll] = useState(true);
+  const enableRemAll = () => {
+    setEnabledRemProAll(
+      protectedFiles.reduce(
+        (prev, file) => prev && file.status !== 'pending',
+        true
+      )
+    );
   };
 
   return (
@@ -132,13 +177,13 @@ export default function MainSection({ messageQueue, encrypt }) {
         </div>
         <div
           className={`${
-            stagedFiles.length !== 0 ? 'hidden' : ''
+            stagedFiles.length === 0 ? 'hidden' : ''
           } w-full flex flex-col px-5 pt-5`}
         >
           <MainButton content="Proteger" onClick={addProtectedFiles} />
         </div>
       </div>
-      {protectedFiles.length !== 0 ? (
+      {protectedFiles.length === 0 ? (
         ''
       ) : (
         <div className="lg:w-0 flex-grow flex flex-col">
@@ -150,18 +195,19 @@ export default function MainSection({ messageQueue, encrypt }) {
                   removeFile={removeProtectedFile}
                   removeAllFiles={removeAllProtectedFiles}
                   state="protected"
-                  encrypt={encrypt}
+                  protect={protect}
+                  upload={upload}
+                  messageQueue={messageQueue}
+                  enabledRemoveAll={enabledRemProAll}
+                  enableRemAll={enableRemAll}
                 />
               </div>
             </div>
           </div>
-          {false ? (
-            ''
-          ) : (
-            <div className="w-full flex flex-col px-5 pt-5">
-              <MainButton content="Subir" onClick={() => {}} enabled={false} />
-            </div>
-          )}
+
+          <div className="w-full flex flex-col px-5 pt-5">
+            <MainButton content="Subir" onClick={uploadFiles} />
+          </div>
         </div>
       )}
     </div>

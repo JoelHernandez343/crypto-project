@@ -1,5 +1,5 @@
 /*global _node*/
 
-const uploadFile = async () => await _node.uploadFile();
+const uploadFile = async file => await _node.uploadFile(file);
 
 export { uploadFile };

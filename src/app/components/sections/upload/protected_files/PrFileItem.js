@@ -2,37 +2,77 @@ import React, { useEffect, useState } from 'react';
 
 import CloseButton from '../../../buttons/CloseButton';
 
-import { getFileName } from '../../../../helpers/files';
+import { getFileName, removeFile as rmf } from '../../../../helpers/files';
 
-export default function FileItem({ file, removeFile, encrypt }) {
+export default function FileItem({
+  file,
+  removeFile,
+  protect,
+  upload,
+  messageQueue,
+  enableRemAll,
+}) {
   const [disabled, setDisabled] = useState(false);
-  const [encrypted, setEncrypted] = useState(false);
+  const [status, setStatus] = useState(file.status);
+  const updateStatus = status => {
+    file.status = status;
 
-  const setInProgress = isInProgress => setDisabled(isInProgress);
+    enableRemAll();
+
+    setStatus(status);
+  };
 
   useEffect(() => {
-    const setFinished = result => {
-      file.isEncrypted = true;
+    protect.add(file.path, setDisabled, setFinished); // eslint-disable-next-line
+  }, []);
 
-      let { outDir, outName, pKey, pHash } = result;
+  useEffect(() => {
+    updateStatus(file.status);
+    if (file.status === 'pending') {
+      upload.add(file, setUploaded);
+    } // eslint-disable-next-line
+  }, [file.status]);
 
-      file.outDir = outDir;
-      file.outName = outName;
-      file.key = pKey;
-      file.hash = pHash;
+  const setFinished = result => {
+    let { outDir, outName, pKey, pHash } = result;
 
-      setEncrypted(true);
-    };
+    file.outDir = outDir;
+    file.outName = outName;
+    file.key = pKey;
+    file.hash = pHash;
 
-    encrypt.add(file.path, setInProgress, setFinished);
-  }, [file, encrypt]);
+    updateStatus('protected');
+  };
+
+  const setUploaded = result => {
+    if (typeof result !== 'string') {
+      updateStatus('uploaded');
+    } else {
+      messageQueue.add({
+        title: 'No se pudo subir el archivo',
+        message: result,
+        style: 'error',
+      });
+
+      updateStatus('protected');
+    }
+  };
 
   return (
-    <div className="w-full h-10 flex bg-gray-200 my-1 hover:bg-indigo-500 hover:bg-opacity-25 transition ease-in-out duration-150 text-gray-600">
+    <div
+      className="w-full h-10 flex bg-gray-200 my-1 hover:bg-indigo-500 hover:bg-opacity-25 transition ease-in-out duration-150 text-gray-600"
+      onClick={() => console.log(file)}
+    >
       <div className="w-12 flex-shrink-0 flex items-center justify-center">
         <span
           className={`mdi mdi-${
-            encrypted ? 'shield-check' : 'shield-sync-outline'
+            status === 'unprotected'
+              ? 'shield-sync-outline'
+              : status === 'protected'
+              ? 'shield-check'
+              : status === 'pending'
+              ? 'loading Loading'
+              : 'check-bold'
           }`}
         ></span>
       </div>
@@ -44,8 +84,24 @@ export default function FileItem({ file, removeFile, encrypt }) {
       </div>
       <div className="w-16 flex-shrink-0 flex items-center justify-center">
         <CloseButton
-          onClick={() => {
-            if (!file.isEncrypted) encrypt.cancel(file.path);
+          onClick={async () => {
+            switch (status) {
+              case 'unprotected':
+                protect.cancel(file.path);
+                break;
+
+              case 'protected':
+                await rmf({ dir: file.outDir, name: file.outName });
+                break;
+
+              case 'pending':
+                setStatus('protected');
+                return;
+
+              default:
+                await rmf({ dir: file.outDir, name: file.outName });
+                break;
+            }
 
             removeFile(file);
           }}

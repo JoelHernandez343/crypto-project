@@ -1,6 +1,6 @@
 /*global _node*/
 
-class EncryptQueue {
+class ProtectQueue {
   constructor() {
     this.queue = [];
     this.running = false;
@@ -8,20 +8,20 @@ class EncryptQueue {
     this.allCanceled = false;
   }
 
-  add(file, setInProgress, setFinished) {
+  add(file, setDisabled, setFinished) {
     this.allCanceled = false;
 
     const cb = function () {
       new Promise(async (resolve, reject) => {
         this.allCanceled
           ? reject('All the encrypt events were cancelled!')
-          : setInProgress(true);
+          : setDisabled(true);
 
         const output = await _node.protect(file);
 
         this.allCanceled
           ? reject('All the encrypt events were cancelled!')
-          : setInProgress(false);
+          : setDisabled(false);
 
         this.allCanceled
           ? reject('All the encrypt events were cancelled!')
@@ -76,4 +76,4 @@ class EncryptQueue {
   }
 }
 
-export { EncryptQueue };
+export { ProtectQueue };

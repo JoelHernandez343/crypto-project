@@ -18,7 +18,7 @@ const USER_INFO = path.join(OAUTH_USER, 'information.json');
 const USER_PIC = path.join(OAUTH_USER, 'picture');
 
 let oauth_server;
-let auth;
+let authentification = {};
 
 const SCOPES = [
   'https://www.googleapis.com/auth/userinfo.email',
@@ -90,10 +90,12 @@ const logSession = async () => {
     installed: { client_id, client_secret, redirect_uris },
   } = credentials;
 
-  console.log(redirect_uris[0]);
-
-  auth = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-  auth.setCredentials(token);
+  authentification.auth = new google.auth.OAuth2(
+    client_id,
+    client_secret,
+    redirect_uris[0]
+  );
+  authentification.auth.setCredentials(token);
 
   let info = (await getPersonalInfo(auth)).data;
 
@@ -106,17 +108,30 @@ const logSession = async () => {
     name: info.name,
     email: info.email,
     image: await loadLocalImage(USER_PIC, 'jpg'),
+    status: 'connected',
   };
 };
 
 const loadSession = async () => {
   try {
+    const {
+      installed: { client_id, client_secret, redirect_uris },
+    } = await getCredentials();
+
+    authentification.auth = new google.auth.OAuth2(
+      client_id,
+      client_secret,
+      redirect_uris[0]
+    );
+    authentification.auth.setCredentials(await readJSON(TOKEN_FILE));
+
     const info = await readJSON(USER_INFO);
 
     return {
       name: info.name,
       email: info.email,
       image: await loadLocalImage(info.pictureFile, 'jpg'),
+      status: 'connected',
     };
   } catch (err) {
     console.log(err);
@@ -125,7 +140,7 @@ const loadSession = async () => {
 };
 
 const closeSession = async () => {
-  auth = undefined;
+  authentification.auth = undefined;
   await fsAsync.rmdir(OAUTH_USER, { recursive: true });
 };
 
@@ -134,5 +149,5 @@ module.exports = {
   loadSession,
   closeSession,
   defaultUser,
-  auth,
+  authentification,
 };

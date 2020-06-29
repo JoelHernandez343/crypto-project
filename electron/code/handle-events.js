@@ -7,7 +7,17 @@ const {
   closeSession,
   defaultUser,
 } = require('./google-api/google-oauth');
-const { protect, DECRYPT_PATH, UPLOAD_PATH } = require('./crypto/crypto');
+
+const {
+  protect,
+  DECRYPT_PATH,
+  UPLOAD_PATH,
+  areRsaKeys,
+  loadRSAPaths,
+} = require('./crypto/crypto');
+
+const { postFile } = require('./google-api/drive');
+
 const { loadLocalImage, removeFile } = require('./helpers/utils');
 
 function handleInitialize(window) {
@@ -53,7 +63,10 @@ function handleInitialize(window) {
   ipcMain.handle('closeSession', async () => await closeSession());
   ipcMain.handle('defaultUser', async () => await defaultUser());
 
+  ipcMain.handle('areRsaKeys', async () => areRsaKeys());
   ipcMain.handle('loadRSAPaths', async () => await loadRSAPaths());
+
+  ipcMain.handle('uploadFile', async (event, file) => await postFile(file));
 }
 
 module.exports.handleInitialize = handleInitialize;

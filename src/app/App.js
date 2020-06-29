@@ -3,14 +3,16 @@ import React, { useState } from 'react';
 import Navbar from './components/navbar/Navbar';
 import mainRoutes from './routes/main_routes';
 import Topbar from './components/Topbar';
+import Popup from './components/Popup';
 import MessageContainer from './components/messages/MessageContainer';
 import { MessageQueue } from './components/messages/MessageQueue';
-import { EncryptQueue } from './components/sections/upload/protected_files/EncryptQueue';
-import Popup from './components/Popup';
+import { ProtectQueue } from './components/sections/upload/protected_files/ProtectQueue';
+import { UploadQueue } from './components/sections/upload/protected_files/UploadQueue';
 
 // Initialization
 const messageQueue = new MessageQueue();
-const encrypt = new EncryptQueue();
+const protect = new ProtectQueue();
+const upload = new UploadQueue();
 
 export default function App({ initialUser }) {
   const [section, setSection] = useState('upload');
@@ -19,13 +21,15 @@ export default function App({ initialUser }) {
     section: route.section,
     renderer: route.route,
   }));
-  const buildSections = section =>
-    sections.map((s, index) => (
+  const buildSections = (section, session) =>
+    sections.map(s => (
       <s.renderer
         key={`section-${s.section}`}
         view={s.section === section}
+        session={session}
         messageQueue={messageQueue}
-        encrypt={s.section === 'upload' ? encrypt : undefined}
+        protect={s.section === 'upload' ? protect : undefined}
+        upload={s.section === 'upload' ? upload : undefined}
       />
     ));
 
@@ -68,7 +72,7 @@ export default function App({ initialUser }) {
       <div className="flex-grow flex flex-col w-0 relative">
         <Topbar />
         <div className="flex-grow overflow-y-auto overflow-x-hidden h-0 scroll">
-          {buildSections(section)}
+          {buildSections(section, session)}
         </div>
         {messageInfo.display ? (
           <MessageContainer information={messageInfo} />

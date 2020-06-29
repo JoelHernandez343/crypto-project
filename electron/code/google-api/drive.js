@@ -2,27 +2,58 @@ const { google } = require('googleapis');
 const fs = require('fs');
 const path = require('path');
 
-let { auth } = require('./google-oauth');
+let { authentification } = require('./google-oauth');
 
 function uploadFile(dir, name, key, hash) {
   return new Promise((resolve, reject) => {
-    if (!auth) reject('No has iniciado sesión.');
+    if (!authentification.auth) reject('No has iniciado sesión.');
 
-    const drive = google.drive({ version: 'v3', auth });
+    const drive = google.drive({ version: 'v3', auth: authentification.auth });
     const reader = fs.createReadStream(path.join(dir, name));
 
     let fileMetadata = {
       name,
       parents: ['appDataFolder'],
       properties: {
-        hash,
-        key,
+        hash: `${hash}`,
       },
     };
 
     let media = {
       mimeType: 'application/octet-stream',
       body: reader,
+    };
+
+    drive.files.create(
+      {
+        resource: fileMetadata,
+        media: media,
+        fields: 'id',
+      },
+      (err, file) => {
+        if (err) reject(err);
+
+        uploadKeyFile(name, hash, key).then(resolve).catch(reject);
+      }
+    );
+  });
+}
+
+function uploadKeyFile(name, hash, key) {
+  return new Promise((resolve, reject) => {
+    const drive = google.drive({ version: 'v3', auth: authentification.auth });
+
+    let fileMetadata = {
+      name: `${name}.key`,
+      parents: ['appDataFolder'],
+      properties: {
+        hash: `${hash}`,
+      },
+    };
+
+    let media = {
+      mimeType: 'application/octet-stream',
+      body: key,
     };
 
     drive.files.create(
@@ -38,9 +69,9 @@ function uploadFile(dir, name, key, hash) {
 
 function downloadFile(fileId, dir, name) {
   return new Promise((resolve, reject) => {
-    if (!auth) reject('No has iniciado sesión.');
+    if (!authentification.auth) reject('No has iniciado sesión.');
 
-    const drive = google.drive({ version: 'v3', auth });
+    const drive = google.drive({ version: 'v3', auth: authentification.auth });
     const writer = fs.createWriteStream(path.join(dir, name));
 
     drive.files
@@ -56,9 +87,9 @@ function downloadFile(fileId, dir, name) {
 
 function deleteFile(fileId) {
   return new Promise((resolve, reject) => {
-    if (!auth) reject('No has iniciado sesión.');
+    if (!authentification.auth) reject('No has iniciado sesión.');
 
-    const drive = google.drive({ version: 'v3', auth });
+    const drive = google.drive({ version: 'v3', auth: authentification.auth });
     drive.files.delete(
       {
         fileId: fileId,
@@ -69,7 +100,7 @@ function deleteFile(fileId) {
 }
 
 async function deleteAllFiles(list) {
-  if (!auth) throw 'No has iniciado sesión.';
+  if (!authentification.auth) throw 'No has iniciado sesión.';
 
   for (const file of list) {
     try {
@@ -84,9 +115,9 @@ async function deleteAllFiles(list) {
 
 function listFiles() {
   return new Promise((resolve, reject) => {
-    if (!auth) reject('No has iniciado sesión.');
+    if (!authentification.auth) reject('No has iniciado sesión.');
 
-    const drive = google.drive({ version: 'v3', auth });
+    const drive = google.drive({ version: 'v3', auth: authentification.auth });
 
     drive.files.list(
       {
@@ -114,9 +145,9 @@ function listFiles() {
 
 function searchFiles(hashString) {
   return new Promise((resolve, reject) => {
-    if (!auth) reject('No has iniciado sesión.');
+    if (!authentification.auth) reject('No has iniciado sesión.');
 
-    const drive = google.drive({ version: 'v3', auth });
+    const drive = google.drive({ version: 'v3', auth: authentification.auth });
 
     drive.files.list(
       {
@@ -128,17 +159,25 @@ function searchFiles(hashString) {
         if (err) reject(err);
         const files = res.data.files;
 
-        return !files.length
-          ? resolve(undefined)
-          : resolve({
-              id: files[0].id,
-              name: files[0].name,
-              hash: files[0].properties.hash,
-              key: files[0].properties.key,
-            });
+        return !files.length ? resolve(undefined) : resolve(files);
       }
     );
   });
+}
+
+async function postFile(file) {
+  try {
+    let r = await searchFiles(file.hash);
+    if (r) {
+      console.log('Found: ', JSON.stringify(r));
+      return 'Ya existe el archivo';
+    }
+
+    await uploadFile(file.outDir, file.outName, file.key, file.hash);
+    return true;
+  } catch (err) {
+    return err;
+  }
 }
 
 module.exports = {
@@ -148,4 +187,5 @@ module.exports = {
   deleteAllFiles,
   listFiles,
   searchFiles,
+  postFile,
 };

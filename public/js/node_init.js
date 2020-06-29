@@ -19,7 +19,10 @@ const logSession = async () => await ipcRenderer.invoke('logSession');
 const loadSession = async () => await ipcRenderer.invoke('loadSession');
 const closeSession = async () => await ipcRenderer.invoke('closeSession');
 const defaultUser = async () => await ipcRenderer.invoke('defaultUser');
-const uploadFile = async () => await ipcRenderer.invoke('uploadFile');
+const uploadFile = async file => await ipcRenderer.invoke('uploadFile', file);
+
+const areRsaKeys = async () => await ipcRenderer.invoke('areRsaKeys');
+const loadRSAPaths = async () => await ipcRenderer.invoke('loadRSAPaths');
 
 const _node = {
   fileDialog,
@@ -35,4 +38,6 @@ const _node = {
   defaultUser,
   uploadFile,
   removeFile,
+  areRsaKeys,
+  loadRSAPaths,
 };

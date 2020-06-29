@@ -54,7 +54,7 @@ async function removeFile({ fullPath, dir, name }) {
 
 function separateDirAndName(fullPath) {
   let name = fullPath.replace(/^.*[\\\/]/, '');
-  let dir = fullPath.replace(new RegExp(`${name}$`));
+  let dir = fullPath.replace(new RegExp(`${name}$`), '');
 
   return { dir, name };
 }
