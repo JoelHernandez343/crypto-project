@@ -1,6 +1,7 @@
 import React from 'react';
 import DestinyButton from './../../buttons/DestinyButton';
 import ListOfFiles from '../upload/ListOfFiles';
+import { uploadFile } from './../../../helpers/up_file';
 
 const openFileSelector = () => {};
 const files = [
@@ -8,6 +9,13 @@ const files = [
   '/home/marbrehi/Escritorio/hola (3° copia).txt',
   '/home/marbrehi/Escritorio/hola (3° copia)(3° copia).txt',
 ];
+
+const upfile = async () => {
+  new Promise((resolve, reject) => {
+    console.log('what am i doing here?');
+    uploadFile().then(resolve).catch(reject);
+  });
+};
 
 export default function MainSection() {
   return (
@@ -33,6 +41,9 @@ export default function MainSection() {
           </div>
         </div>
       )}
+      <div className=" items-center justify-center">
+        <DestinyButton content="Upload" onClick={upfile} />
+      </div>
     </div>
   );
 }

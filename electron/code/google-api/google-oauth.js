@@ -18,6 +18,7 @@ const USER_INFO = path.join(OAUTH_USER, 'information.json');
 const USER_PIC = path.join(OAUTH_USER, 'picture');
 
 let oauth_server;
+let auth;
 
 const SCOPES = [
   'https://www.googleapis.com/auth/userinfo.email',
@@ -91,11 +92,7 @@ const logSession = async () => {
 
   console.log(redirect_uris[0]);
 
-  const auth = new google.auth.OAuth2(
-    client_id,
-    client_secret,
-    redirect_uris[0]
-  );
+  auth = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
   auth.setCredentials(token);
 
   let info = (await getPersonalInfo(auth)).data;
@@ -127,12 +124,15 @@ const loadSession = async () => {
   }
 };
 
-const closeSession = async () =>
+const closeSession = async () => {
+  auth = undefined;
   await fsAsync.rmdir(OAUTH_USER, { recursive: true });
+};
 
 module.exports = {
   logSession,
   loadSession,
   closeSession,
   defaultUser,
+  auth,
 };

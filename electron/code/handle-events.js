@@ -8,7 +8,7 @@ const {
   loadSession,
   closeSession,
   defaultUser,
-} = require('./google-oauth/google-oauth');
+} = require('./google-api/google-oauth');
 const { AESencrypt } = require('./crypto/crypto');
 const { loadLocalImage } = require('./helpers/utils');
 

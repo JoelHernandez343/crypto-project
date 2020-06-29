@@ -17,6 +17,7 @@ const logSession = async () => await ipcRenderer.invoke('logSession');
 const loadSession = async () => await ipcRenderer.invoke('loadSession');
 const closeSession = async () => await ipcRenderer.invoke('closeSession');
 const defaultUser = async () => await ipcRenderer.invoke('defaultUser');
+const uploadFile = async () => await ipcRenderer.invoke('uploadFile');
 
 const _node = {
   fileDialog,
@@ -30,4 +31,5 @@ const _node = {
   loadSession,
   closeSession,
   defaultUser,
+  uploadFile,
 };
