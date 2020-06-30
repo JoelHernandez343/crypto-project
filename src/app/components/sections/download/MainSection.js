@@ -29,7 +29,7 @@ const updateFiles = async (session, messageQueue, files, setFiles) => {
     return;
   }
 
-  if (answer.length === 0) {
+  if (answer.length === 0 && files.length === 0) {
     messageQueue.add({
       title: 'No hay archivos que listar en Google Drive.',
       message: 'No hay archivos que listar',

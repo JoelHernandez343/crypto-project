@@ -42,6 +42,8 @@ export default function DownloadItem({ file, destDir, messageQueue }) {
   };
 
   const del = async file => {
+    setStatus('downloading');
+
     let answer = await deleteBothFiles(file);
 
     if (typeof answer === 'string') {
@@ -58,6 +60,8 @@ export default function DownloadItem({ file, destDir, messageQueue }) {
       message: `El archivo ${file.name} fue eliminado correctamente`,
       style: 'success',
     });
+
+    setStatus('deleted');
   };
 
   const setIcon = status =>
@@ -65,10 +69,20 @@ export default function DownloadItem({ file, destDir, messageQueue }) {
       ? 'loading Loading'
       : status === 'waiting'
       ? 'lock'
-      : 'check-bold';
+      : status === 'downloaded'
+      ? 'check-bold'
+      : 'delete-alert-outline';
 
   return (
-    <div className="w-full h-10 flex bg-gray-200 my-1 hover:bg-indigo-500 hover:bg-opacity-25 transition ease-in-out duration-150 text-gray-600">
+    <div
+      className={`${
+        status === 'downloaded'
+          ? 'bg-green-300 hover:bg-green-200'
+          : status === 'deleted'
+          ? 'bg-red-300 hover:bg-red-200'
+          : 'hover:bg-indigo-500 hover:bg-opacity-25'
+      } w-full h-10 flex bg-gray-200 my-1 transition ease-in-out duration-150 text-gray-600`}
+    >
       <div className="w-12 flex-shrink-0 flex items-center justify-center">
         <span className={`mdi mdi-${setIcon(status)}`}></span>
       </div>
