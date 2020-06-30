@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import DownloadButton from '../../buttons/DownloadButton';
-import { recover } from '../../../helpers/drive';
+import { recover, deleteBothFiles } from '../../../helpers/drive';
 import { areRsaKeys } from '../../../helpers/rsa';
 
 export default function DownloadItem({ file, destDir, messageQueue }) {
@@ -41,6 +41,25 @@ export default function DownloadItem({ file, destDir, messageQueue }) {
     setStatus('downloaded');
   };
 
+  const del = async file => {
+    let answer = await deleteBothFiles(file);
+
+    if (typeof answer === 'string') {
+      messageQueue.add({
+        title: 'No se pudo eliminar',
+        message: answer,
+        style: 'error',
+      });
+      return;
+    }
+
+    messageQueue.add({
+      title: `Archivo ${file.name} eliminado exitosamente`,
+      message: `El archivo ${file.name} fue eliminado correctamente`,
+      style: 'success',
+    });
+  };
+
   const setIcon = status =>
     status === 'downloading'
       ? 'loading Loading'
@@ -67,7 +86,12 @@ export default function DownloadItem({ file, destDir, messageQueue }) {
         />
       </div>
       <div className="w-10 flex-shrink-0 flex items-center justify-center">
-        <DownloadButton onClick={() => {}} del={true} />
+        <DownloadButton
+          onClick={() => {
+            del(file);
+          }}
+          del={true}
+        />
       </div>
     </div>
   );

@@ -34,5 +34,8 @@ _node.getDownloadDir = async () => await ipcRenderer.invoke('getDownloadDir');
 
 _node.openDir = async () => await ipcRenderer.invoke('openDir');
 
+_node.deleteBothFiles = async file =>
+  await ipcRenderer.invoke('deleteBothFiles', file);
+
 _node.recover = async (file, destDir) =>
   await ipcRenderer.invoke('recover', file, destDir);

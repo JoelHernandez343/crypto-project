@@ -101,6 +101,18 @@ function deleteFile(fileId) {
   });
 }
 
+async function deleteBothFiles(file) {
+  let externKey = await searchForKey(file.hash);
+  if (!externKey) return 'Error fatal: no se encontró la llave';
+  try {
+    await deleteFile(file.id);
+    await deleteFile(externKey.id);
+  } catch (err) {
+    return 'No se pudo eliminar.';
+  }
+  return true;
+}
+
 async function deleteAllFiles(list) {
   if (!authentification.auth) throw 'No has iniciado sesión.';
 
@@ -247,4 +259,5 @@ module.exports = {
   searchFiles,
   postFile,
   searchForKey,
+  deleteBothFiles,
 };

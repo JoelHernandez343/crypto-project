@@ -22,6 +22,7 @@ const {
   listOnlyFiles,
   deleteFile,
   deleteAllFiles,
+  deleteBothFiles,
 } = require('./google-api/drive');
 
 const { loadLocalImage, removeFile } = require('./helpers/utils');
@@ -96,6 +97,11 @@ function handleInitialize(window, app) {
   });
 
   ipcMain.handle('getDownloadDir', async () => app.getPath('downloads'));
+
+  ipcMain.handle(
+    'deleteBothFiles',
+    async (event, file) => await deleteBothFiles(file)
+  );
 
   ipcMain.handle(
     'openDir',
