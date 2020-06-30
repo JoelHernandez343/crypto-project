@@ -10,5 +10,7 @@ const getIcon = name => {
 const getFileName = file => file.replace(/.*[\\/]/, '');
 const getIsFile = async path => await _node.getIsFile(path);
 const removeFile = async options => await _node.removeFile(options);
+const getDownloadDir = async () => await _node.getDownloadDir();
+const openDir = async () => await _node.openDir();
 
-export { getFileName, getIsFile, getIcon, removeFile };
+export { getFileName, getIsFile, getIcon, removeFile, getDownloadDir, openDir };

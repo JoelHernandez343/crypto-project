@@ -28,5 +28,5 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   createWindow();
-  handleInitialize(window);
+  handleInitialize(window, app);
 });

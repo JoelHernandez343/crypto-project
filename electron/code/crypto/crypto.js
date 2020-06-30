@@ -5,7 +5,7 @@ const { dialog } = require('electron');
 
 const { separateDirAndName } = require('../helpers/utils');
 
-const iv = stringToBuffer('36d6b93416b72e989359a5f0b73defde');
+const iv = strToBuff('36d6b93416b72e989359a5f0b73defde');
 
 const UPLOAD_PATH = path.join('electron', 'tmpToUpload');
 const DECRYPT_PATH = path.join('electron', 'tmpToDecrypt');
@@ -64,13 +64,9 @@ function hash(file) {
     const hash = crypto.createHash('sha256');
 
     reader.on('readable', () => {
-      // Only one element is going to be produced by the
-      // hash stream.
       const data = reader.read();
-      if (data) hash.update(data);
-      else {
-        resolve(hash.digest());
-      }
+
+      data ? hash.update(data) : resolve(hash.digest());
     });
   });
 }
@@ -82,33 +78,39 @@ function areRsaKeys() {
 async function loadRSAPaths() {
   const public = (
     await dialog.showOpenDialog({
-      properties: ['openFile', 'multiSelections'],
+      properties: ['openFile'],
+      title: 'LLAVE PÚBLICA',
     })
   ).filePaths[0];
+
+  console.log(public);
 
   if (!public) return 'No se seleccionó ningún archivo';
 
   const private = (
     await dialog.showOpenDialog({
-      properties: ['openFile', 'multiSelections'],
+      properties: ['openFile'],
+      title: 'LLAVE PRIVADA',
     })
   ).filePaths[0];
+
+  console.log(private);
 
   if (!private) return 'No se seleccionó ningún archivo';
 
   try {
     const msj = '36d6b93416b72e989359a5f0b73defae';
-    const enc = RSA1024encrypt(stringToBuffer(msj), public);
-    const dec = RSA1024decrypt(stringToBuffer(enc), private);
+    const enc = buffToStr(RSA1024encrypt(strToBuff(msj), public));
+    const dec = buffToStr(RSA1024decrypt(strToBuff(enc), private));
 
-    if (msj != dec) return 'Archivos inválidos.';
+    if (msj !== dec) return 'Archivos inválidos: no corresponden';
 
     PUBLIC_KEY_PATH = public;
     PRIVATE_KEY_PATH = private;
 
     return true;
   } catch (err) {
-    return 'Archivos inválidos';
+    return 'Archivos inválidos: archivos corruptos';
   }
 }
 
@@ -117,7 +119,7 @@ function RSA1024encrypt(toEncrypt, localPathPublic) {
   const publicKey = fs.readFileSync(absolutePath, 'utf8');
   const encrypted = crypto.publicEncrypt(publicKey, toEncrypt);
 
-  return bufferToString(encrypted);
+  return encrypted;
 }
 
 function RSA1024decrypt(toDecrypt, localPathPrivate) {
@@ -134,11 +136,11 @@ function RSA1024decrypt(toDecrypt, localPathPrivate) {
   return decrypted;
 }
 
-function bufferToString(buffer) {
+function buffToStr(buffer) {
   return buffer.toString('hex');
 }
 
-function stringToBuffer(string) {
+function strToBuff(string) {
   return Buffer.from(string, 'hex');
 }
 
@@ -148,17 +150,17 @@ async function RSA_OPRF(file) {
 
 async function protect(file) {
   const key = await RSA_OPRF(file);
-  const output = await AESencrypt(file, key);
-  const pHash = bufferToString(await hash(output));
-  const pKey = bufferToString(await RSA1024encrypt(key, PUBLIC_KEY_PATH));
+  const encryptedFile = await AESencrypt(file, key);
+  const pHash = buffToStr(await hash(encryptedFile));
+  const pKey = buffToStr(await RSA1024encrypt(key, PUBLIC_KEY_PATH));
 
-  const { dir, name } = separateDirAndName(output);
+  const { dir, name } = separateDirAndName(encryptedFile);
 
   return { outDir: dir, outName: name, pKey, pHash };
 }
 
 async function recover(pFile, pKey) {
-  const key = await RSA1024decrypt(stringToBuffer(key), PRIVATE_KEY_PATH);
+  const key = await RSA1024decrypt(strToBuff(key), PRIVATE_KEY_PATH);
   const File = await AESdecrypt(file, key);
 }
 

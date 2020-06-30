@@ -1,50 +1,35 @@
 const { ipcRenderer } = require('electron');
 
-const initTmpDirs = async () => await ipcRenderer.invoke('initTmpDirs');
+let _node = {};
 
-const fileDialog = async () => await ipcRenderer.invoke('openFileDialog');
-const minimize = async () => ipcRenderer.invoke('minimize');
-const close = async () => ipcRenderer.invoke('close');
+_node.initTmpDirs = async () => await ipcRenderer.invoke('initTmpDirs');
 
-const getIsFile = async path => await ipcRenderer.invoke('getIsFile', path);
-const removeFile = async options =>
+_node.fileDialog = async () => await ipcRenderer.invoke('openFileDialog');
+_node.minimize = async () => ipcRenderer.invoke('minimize');
+_node.close = async () => ipcRenderer.invoke('close');
+
+_node.getIsFile = async path => await ipcRenderer.invoke('getIsFile', path);
+_node.removeFile = async options =>
   await ipcRenderer.invoke('removeFile', options);
 
-const protect = async file => await ipcRenderer.invoke('protect', file);
+_node.protect = async file => await ipcRenderer.invoke('protect', file);
 
-const loadLocalImage = async (image, ext) =>
+_node.loadLocalImage = async (image, ext) =>
   await ipcRenderer.invoke('loadLocalImage', image, ext);
 
-const logSession = async () => await ipcRenderer.invoke('logSession');
-const loadSession = async () => await ipcRenderer.invoke('loadSession');
-const closeSession = async () => await ipcRenderer.invoke('closeSession');
-const defaultUser = async () => await ipcRenderer.invoke('defaultUser');
-const uploadFile = async file => await ipcRenderer.invoke('uploadFile', file);
-const listOnlyFiles = async () => await ipcRenderer.invoke('listOnlyFiles');
-const deleteFile = async id => await ipcRenderer.invoke('deleteFile', id);
-const deleteAllFiles = async list =>
+_node.logSession = async () => await ipcRenderer.invoke('logSession');
+_node.loadSession = async () => await ipcRenderer.invoke('loadSession');
+_node.closeSession = async () => await ipcRenderer.invoke('closeSession');
+_node.defaultUser = async () => await ipcRenderer.invoke('defaultUser');
+_node.uploadFile = async file => await ipcRenderer.invoke('uploadFile', file);
+_node.listOnlyFiles = async () => await ipcRenderer.invoke('listOnlyFiles');
+_node.deleteFile = async id => await ipcRenderer.invoke('deleteFile', id);
+_node.deleteAllFiles = async list =>
   await ipcRenderer.invoke('deleteAllFiles', list);
 
-const areRsaKeys = async () => await ipcRenderer.invoke('areRsaKeys');
-const loadRSAPaths = async () => await ipcRenderer.invoke('loadRSAPaths');
+_node.areRsaKeys = async () => await ipcRenderer.invoke('areRsaKeys');
+_node.loadRSAPaths = async () => await ipcRenderer.invoke('loadRSAPaths');
 
-const _node = {
-  fileDialog,
-  initTmpDirs,
-  minimize,
-  close,
-  getIsFile,
-  protect,
-  logSession,
-  loadLocalImage,
-  loadSession,
-  closeSession,
-  defaultUser,
-  uploadFile,
-  removeFile,
-  areRsaKeys,
-  loadRSAPaths,
-  listOnlyFiles,
-  deleteFile,
-  deleteAllFiles,
-};
+_node.getDownloadDir = async () => await ipcRenderer.invoke('getDownloadDir');
+
+_node.openDir = async () => await ipcRenderer.invoke('openDir');

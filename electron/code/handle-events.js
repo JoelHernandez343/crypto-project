@@ -25,7 +25,7 @@ const {
 
 const { loadLocalImage, removeFile } = require('./helpers/utils');
 
-function handleInitialize(window) {
+function handleInitialize(window, app) {
   ipcMain.handle('initTmpDirs', async event => {
     fs.rmdirSync(UPLOAD_PATH, { recursive: true }, err => console.log(err));
     fs.mkdirSync(UPLOAD_PATH);
@@ -93,6 +93,19 @@ function handleInitialize(window) {
       return err;
     }
   });
+
+  ipcMain.handle('getDownloadDir', async () => app.getPath('downloads'));
+
+  ipcMain.handle(
+    'openDir',
+    async () =>
+      (
+        await dialog.showOpenDialog({
+          properties: ['openDirectory'],
+          title: 'Seleccionar directorio de descarga',
+        })
+      ).filePaths[0]
+  );
 }
 
 module.exports.handleInitialize = handleInitialize;

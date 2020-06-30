@@ -60,7 +60,11 @@ export default function FileItem({
 
   return (
     <div
-      className="w-full h-10 flex bg-gray-200 my-1 hover:bg-indigo-500 hover:bg-opacity-25 transition ease-in-out duration-150 text-gray-600"
+      className={`${
+        status === 'uploaded'
+          ? 'bg-green-300 hover:bg-green-200'
+          : 'bg-gray-200 hover:bg-indigo-500 hover:bg-opacity-25'
+      } my-1 w-full h-10 flex transition ease-in-out duration-150 text-gray-600`}
       onClick={() => console.log(file)}
     >
       <div className="w-12 flex-shrink-0 flex items-center justify-center">

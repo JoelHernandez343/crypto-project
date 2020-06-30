@@ -220,11 +220,15 @@ function searchForKey(hashString) {
 
 async function postFile(file) {
   try {
+    console.log(`Searching hash of: ${file.name}...`);
+
     let r = await searchFiles(file.hash);
     if (r) {
       console.log('Found: ', JSON.stringify(r));
       return 'Ya existe el archivo';
     }
+
+    console.log(`Uploading ${file.name}...`);
 
     await uploadFile(file.outDir, file.outName, file.key, file.hash);
     return true;
