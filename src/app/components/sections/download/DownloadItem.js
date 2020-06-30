@@ -2,12 +2,6 @@ import React from 'react';
 
 import DownloadButton from '../../buttons/DownloadButton';
 
-const renderDownloadIcon = file => (
-  <div className="w-16 flex-shrink-0 flex items-center justify-center">
-    <DownloadButton onClick={() => {}} />
-  </div>
-);
-
 export default function FileItem({ file }) {
   return (
     <div className="w-full h-10 flex bg-gray-200 my-1 hover:bg-indigo-500 hover:bg-opacity-25 transition ease-in-out duration-150 text-gray-600">
@@ -20,7 +14,12 @@ export default function FileItem({ file }) {
         </p>
         <p className="quicksand font-semibold text-xs truncate">{file.id}</p>
       </div>
-      {renderDownloadIcon(file)}
+      <div className="w-10 flex-shrink-0 flex items-center justify-center">
+        <DownloadButton onClick={() => {}} />
+      </div>
+      <div className="w-10 flex-shrink-0 flex items-center justify-center">
+        <DownloadButton onClick={() => {}} del={true} />
+      </div>
     </div>
   );
 }
