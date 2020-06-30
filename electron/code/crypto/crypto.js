@@ -131,7 +131,7 @@ function RSA1024decrypt(toDecrypt, localPathPrivate) {
     },
     toDecrypt
   );
-  return bufferToString(decrypted);
+  return decrypted;
 }
 
 function bufferToString(buffer) {
@@ -155,6 +155,11 @@ async function protect(file) {
   const { dir, name } = separateDirAndName(output);
 
   return { outDir: dir, outName: name, pKey, pHash };
+}
+
+async function recover(pFile, pKey) {
+  const key = await RSA1024decrypt(stringToBuffer(key), PRIVATE_KEY_PATH);
+  const File = await AESdecrypt(file, key);
 }
 
 module.exports = {
