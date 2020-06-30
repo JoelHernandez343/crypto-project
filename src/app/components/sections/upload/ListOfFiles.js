@@ -23,7 +23,8 @@ const renderItem = (
   protect,
   upload,
   messageQueue,
-  enableRemAll
+  enableRemAll,
+  destDir
 ) => {
   return state === 'stage' ? (
     <FileItem key={file} file={file} removeFile={removeFile} />
@@ -38,7 +39,12 @@ const renderItem = (
       enableRemAll={enableRemAll}
     />
   ) : (
-    <DownloadItem key={file.id} file={file} />
+    <DownloadItem
+      key={file.id}
+      file={file}
+      messageQueue={messageQueue}
+      destDir={destDir}
+    />
   );
 };
 
@@ -52,6 +58,7 @@ export default function ListOfFiles({
   messageQueue,
   enabledRemoveAll,
   enableRemAll,
+  destDir,
 }) {
   const buildFileList = files =>
     files.map(file =>
@@ -62,7 +69,8 @@ export default function ListOfFiles({
         protect,
         upload,
         messageQueue,
-        enableRemAll
+        enableRemAll,
+        destDir
       )
     );
 

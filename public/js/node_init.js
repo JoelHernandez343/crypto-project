@@ -33,3 +33,6 @@ _node.loadRSAPaths = async () => await ipcRenderer.invoke('loadRSAPaths');
 _node.getDownloadDir = async () => await ipcRenderer.invoke('getDownloadDir');
 
 _node.openDir = async () => await ipcRenderer.invoke('openDir');
+
+_node.recover = async (file, destDir) =>
+  await ipcRenderer.invoke('recover', file, destDir);

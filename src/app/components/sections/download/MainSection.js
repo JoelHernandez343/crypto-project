@@ -87,7 +87,12 @@ export default function MainSection({ session, messageQueue }) {
           ''
         ) : (
           <div className="w-full flex-grow flex h-56">
-            <ListOfFiles files={files} state="download" />
+            <ListOfFiles
+              files={files}
+              state="download"
+              destDir={dir}
+              messageQueue={messageQueue}
+            />
           </div>
         )}
         <div

@@ -4,7 +4,7 @@ import CloseButton from '../../../buttons/CloseButton';
 
 import { getFileName, removeFile as rmf } from '../../../../helpers/files';
 
-export default function FileItem({
+export default function PrFileItem({
   file,
   removeFile,
   protect,

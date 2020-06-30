@@ -220,7 +220,7 @@ function searchForKey(hashString) {
 
 async function postFile(file) {
   try {
-    console.log(`Searching hash of: ${file.name}...`);
+    console.log(`Searching hash of: ${file.path}...`);
 
     let r = await searchFiles(file.hash);
     if (r) {
@@ -228,7 +228,7 @@ async function postFile(file) {
       return 'Ya existe el archivo';
     }
 
-    console.log(`Uploading ${file.name}...`);
+    console.log(`Uploading ${file.path}...`);
 
     await uploadFile(file.outDir, file.outName, file.key, file.hash);
     return true;
@@ -246,4 +246,5 @@ module.exports = {
   listOnlyFiles,
   searchFiles,
   postFile,
+  searchForKey,
 };

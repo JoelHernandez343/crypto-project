@@ -3,7 +3,12 @@ const path = require('path');
 const fs = require('fs');
 const { dialog } = require('electron');
 
-const { separateDirAndName } = require('../helpers/utils');
+const {
+  separateDirAndName,
+  readUTF8File,
+  removeFile,
+} = require('../helpers/utils');
+const { searchForKey, downloadFile } = require('../google-api/drive');
 
 const iv = strToBuff('36d6b93416b72e989359a5f0b73defde');
 
@@ -20,23 +25,16 @@ function AESencrypt(file, key) {
 
     let encrypt = crypto.createCipheriv('aes-256-ctr', key, iv);
 
-    let size = fs.statSync(file).size;
-
-    r.on('data', data => {
-      let percentage = parseInt(r.bytesRead) / parseInt(size);
-      // console.log(percentage * 100);
-    });
-
     r.on('open', () => r.pipe(encrypt).pipe(w));
     r.on('end', () => resolve(output));
     r.on('error', () => reject);
   });
 }
 
-function AESdecrypt(file, key) {
+function AESdecrypt(file, dest, key) {
   return new Promise((resolve, reject) => {
     let output = path.join(
-      DECRYPT_PATH,
+      dest,
       `${file.replace(/^.*[\\\/]/, '').replace(/\.crp$/, '')}`
     );
 
@@ -44,13 +42,6 @@ function AESdecrypt(file, key) {
     let r = fs.createReadStream(file, { encoding: null });
 
     let decrypt = crypto.createDecipheriv('aes-256-ctr', key, iv);
-
-    let size = fs.statSync(file).size;
-
-    r.on('data', data => {
-      let percentage = parseInt(r.bytesRead) / parseInt(size);
-      // console.log(percentage * 100);
-    });
 
     r.on('open', () => r.pipe(decrypt).pipe(w));
     r.on('end', () => resolve(output));
@@ -150,6 +141,7 @@ async function RSA_OPRF(file) {
 
 async function protect(file) {
   const key = await RSA_OPRF(file);
+
   const encryptedFile = await AESencrypt(file, key);
   const pHash = buffToStr(await hash(encryptedFile));
   const pKey = buffToStr(await RSA1024encrypt(key, PUBLIC_KEY_PATH));
@@ -159,9 +151,34 @@ async function protect(file) {
   return { outDir: dir, outName: name, pKey, pHash };
 }
 
-async function recover(pFile, pKey) {
-  const key = await RSA1024decrypt(strToBuff(key), PRIVATE_KEY_PATH);
-  const File = await AESdecrypt(file, key);
+async function recover(file, destDir) {
+  let externKey = await searchForKey(file.hash);
+  if (!externKey) return 'Error fatal: no se encontró la llave';
+
+  try {
+    await downloadFile(file.id, DECRYPT_PATH, file.name);
+    await downloadFile(externKey.id, DECRYPT_PATH, externKey.name);
+  } catch (err) {
+    return err;
+  }
+
+  let pKey = await readUTF8File(DECRYPT_PATH, externKey.name);
+
+  const key = await RSA1024decrypt(strToBuff(pKey), PRIVATE_KEY_PATH);
+  const recovered = await AESdecrypt(
+    path.join(DECRYPT_PATH, file.name),
+    destDir,
+    key
+  );
+
+  console.log(`File decrypted at ${destDir}`);
+
+  await removeFile({ dir: DECRYPT_PATH, name: file.name });
+  await removeFile({ dir: DECRYPT_PATH, name: externKey.name });
+
+  console.log(`Cleaned`);
+
+  return true;
 }
 
 module.exports = {
@@ -170,4 +187,5 @@ module.exports = {
   DECRYPT_PATH,
   loadRSAPaths,
   areRsaKeys,
+  recover,
 };

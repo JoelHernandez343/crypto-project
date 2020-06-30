@@ -59,6 +59,11 @@ function separateDirAndName(fullPath) {
   return { dir, name };
 }
 
+async function readUTF8File(dir, name) {
+  console.log(path.join(dir, name));
+  return await fsAsync.readFile(path.join(dir, name), { encoding: 'utf8' });
+}
+
 module.exports = {
   readJSON,
   writeJSON,
@@ -67,4 +72,5 @@ module.exports = {
   fetchImage,
   removeFile,
   separateDirAndName,
+  readUTF8File,
 };

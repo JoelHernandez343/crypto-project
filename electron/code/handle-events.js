@@ -14,6 +14,7 @@ const {
   UPLOAD_PATH,
   areRsaKeys,
   loadRSAPaths,
+  recover,
 } = require('./crypto/crypto');
 
 const {
@@ -105,6 +106,11 @@ function handleInitialize(window, app) {
           title: 'Seleccionar directorio de descarga',
         })
       ).filePaths[0]
+  );
+
+  ipcMain.handle(
+    'recover',
+    async (event, file, destDir) => await recover(file, destDir)
   );
 }
 
