@@ -97,7 +97,7 @@ const logSession = async () => {
   );
   authentification.auth.setCredentials(token);
 
-  let info = (await getPersonalInfo(auth)).data;
+  let info = (await getPersonalInfo(authentification.auth)).data;
 
   await saveProfilePic(info, USER_PIC);
   info.pictureFile = USER_PIC;
@@ -134,7 +134,7 @@ const loadSession = async () => {
       status: 'connected',
     };
   } catch (err) {
-    console.log(err);
+    console.log('No se pudo cargar la sesión');
     return await defaultUser();
   }
 };

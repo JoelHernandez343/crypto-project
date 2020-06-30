@@ -9,16 +9,7 @@ const cmpFileArrays = (a, b) => {
   return a.reduce((prev, f, index) => prev && f.hash === b[index].hash);
 };
 
-const updateFiles = async (session, messageQueue, files, setFiles) => {
-  if (session.status !== 'connected') {
-    messageQueue.add({
-      title: 'No se puede actualizar en este momento.',
-      message: 'Sesión no iniciada.',
-      style: 'error',
-    });
-    return;
-  }
-
+const updateFiles = async (messageQueue, files, setFiles) => {
   const answer = await listOnlyFiles();
   if (typeof answer === 'string') {
     messageQueue.add({
@@ -50,9 +41,6 @@ const updateFiles = async (session, messageQueue, files, setFiles) => {
 
 export default function MainSection({ session, messageQueue }) {
   const [files, setFiles] = useState([]);
-  useEffect(() => {
-    updateFiles(session, messageQueue, files, setFiles);
-  }, [session, files, setFiles, messageQueue]);
 
   const [dir, setDir] = useState('');
   useEffect(() => {
@@ -104,7 +92,18 @@ export default function MainSection({ session, messageQueue }) {
             className={`${
               files.length === 0 ? 'flex-col' : ''
             } flex w-full h-full bg-transparent hover:bg-indigo-500 hover:bg-opacity-25 cursor-pointer transition ease-in-out duration-150 text-gray-500 items-center justify-center`}
-            onClick={() => updateFiles(session, messageQueue, files, setFiles)}
+            onClick={() => {
+              if (session.status !== 'connected') {
+                messageQueue.add({
+                  title: 'No se puede actualizar en este momento.',
+                  message: 'Sesión no iniciada.',
+                  style: 'error',
+                });
+                return;
+              }
+
+              updateFiles(messageQueue, files, setFiles);
+            }}
           >
             <span
               className="mdi mdi-reload"
@@ -121,21 +120,6 @@ export default function MainSection({ session, messageQueue }) {
           </div>
         </div>
       </div>
-      {/* {files.length === 0 ? (
-        ''
-      ) : (
-        <div className=" flex-grow rounded bg-gray-200 shadow flex mt-5">
-          <div className="w-full p-4 flex flex-col">
-            <div className="w-full flex-grow flex h-64">
-              <ListOfFiles
-                files={files}
-                downloadFile={() => {}}
-                state="download"
-              />
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }
