@@ -13,8 +13,8 @@ export default function User({ session: { name, email, image }, userClick }) {
         alt=""
       />
       <div className="hidden md:block flex-grow text-left pointer-events-none">
-        <p className="quicksand font-bold">{name}</p>
-        <p className="quicksand text-xs">{email}</p>
+        <p className="quicksand font-bold text-indigo-900">{name}</p>
+        <p className="quicksand text-xs font-medium text-gray-700">{email}</p>
       </div>
     </div>
   );

@@ -126,6 +126,7 @@ const loadSession = async () => {
     authentification.auth.setCredentials(await readJSON(TOKEN_FILE));
 
     const info = await readJSON(USER_INFO);
+    console.log('Sesión cargada');
 
     return {
       name: info.name,

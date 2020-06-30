@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Navbar from './components/navbar/Navbar';
 import mainRoutes from './routes/main_routes';
@@ -8,6 +8,8 @@ import MessageContainer from './components/messages/MessageContainer';
 import { MessageQueue } from './components/messages/MessageQueue';
 import { ProtectQueue } from './components/sections/upload/protected_files/ProtectQueue';
 import { UploadQueue } from './components/sections/upload/protected_files/UploadQueue';
+
+import { areRsaKeys } from './helpers/rsa';
 
 // Initialization
 const messageQueue = new MessageQueue();
@@ -21,7 +23,7 @@ export default function App({ initialUser }) {
     section: route.section,
     renderer: route.route,
   }));
-  const buildSections = (section, session) =>
+  const buildSections = (section, session, settedKey, setSettedKey) =>
     sections.map(s => (
       <s.renderer
         key={`section-${s.section}`}
@@ -30,6 +32,8 @@ export default function App({ initialUser }) {
         messageQueue={messageQueue}
         protect={s.section === 'upload' ? protect : undefined}
         upload={s.section === 'upload' ? upload : undefined}
+        settedKey={settedKey}
+        setSettedKey={setSettedKey}
       />
     ));
 
@@ -52,6 +56,11 @@ export default function App({ initialUser }) {
   };
 
   const [session, setSession] = useState(initialUser);
+  const [settedKey, setSettedKey] = useState(false);
+  useEffect(() => {
+    const checkForKeys = async () => setSettedKey(await areRsaKeys());
+    checkForKeys();
+  }, []);
 
   return (
     <div
@@ -72,7 +81,7 @@ export default function App({ initialUser }) {
       <div className="flex-grow flex flex-col w-0 relative">
         <Topbar />
         <div className="flex-grow overflow-y-auto overflow-x-hidden h-0 scroll">
-          {buildSections(section, session)}
+          {buildSections(section, session, settedKey, setSettedKey)}
         </div>
         {messageInfo.display ? (
           <MessageContainer information={messageInfo} />
