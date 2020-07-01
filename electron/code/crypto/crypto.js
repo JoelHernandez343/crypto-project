@@ -196,11 +196,15 @@ function hashBigInt(z) {
 
 async function RSA_OPRF(file) {
   let h = BigInt(`0x${buffToStr(await hash(file))}`);
+  console.log('Pidiendo n...');
   let n = await getPublicKey();
+  console.log('n recibida!');
   const r = genRand(0n, n);
 
   let x = X(h, r, e, n);
+  console.log('Pidiendo Y');
   let y = await postX(x);
+  console.log('Recibida Y');
   let z = Z(y, r, n);
 
   if (validation(h, z, n)) return await hashBigInt(z);
@@ -210,6 +214,8 @@ async function RSA_OPRF(file) {
 
 async function protect(file) {
   try {
+    console.log(`Protegiendo a ${file}`);
+
     const key = await RSA_OPRF(file);
 
     const encryptedFile = await AESencrypt(file, key);
@@ -217,6 +223,8 @@ async function protect(file) {
     const pKey = buffToStr(await RSA1024encrypt(key, PUBLIC_KEY_PATH));
 
     const { dir, name } = separateDirAndName(encryptedFile);
+
+    console.log(`Protegido: ${file}`);
 
     return { outDir: dir, outName: name, pKey, pHash };
   } catch (err) {
@@ -230,8 +238,11 @@ async function recover(file, destDir) {
   if (!externKey) return 'Error fatal: no se encontró la llave';
 
   try {
+    console.log('Descargando archivo encriptado...');
     await downloadFile(file.id, DECRYPT_PATH, file.name);
+    console.log('Descargando llave encriptada...');
     await downloadFile(externKey.id, DECRYPT_PATH, externKey.name);
+    console.log('Archivos descargados, procediendo a desencriptar');
   } catch (err) {
     return err;
   }
