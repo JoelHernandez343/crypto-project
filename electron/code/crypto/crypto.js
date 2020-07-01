@@ -10,20 +10,9 @@ const {
   removeFile,
 } = require('../helpers/utils');
 const { searchForKey, downloadFile } = require('../google-api/drive');
+const { getPublicKey, postX } = require('../net/net');
 
 const iv = strToBuff('36d6b93416b72e989359a5f0b73defde');
-const primes = [
-  2425967623052370772757633156976982469681n,
-  1451730470513778492236629598992166035067n,
-  6075380529345458860144577398704761614649n,
-  3615415881585117908550243505309785526231n,
-  5992830235524142758386850633773258681119n,
-  4384165182867240584805930970951575013697n,
-  5991810554633396517767024967580894321153n,
-  6847944682037444681162770672798288913849n,
-  4146162919458530168953357282201621124057n,
-  5570373270183181665098052481109678989411n,
-];
 const e = 2946061206446183136035364744505844247510411120867004678223655427763264058485174539n;
 
 const UPLOAD_PATH = path.join('electron', 'tmpToUpload');
@@ -177,12 +166,6 @@ function X(h, r, e, n) {
   return x;
 }
 
-function Y(x, d, n) {
-  // x^d mod n
-  let y = bigintModArith.modPow(x, d, n);
-  return y;
-}
-
 function Z(y, r, n) {
   // (y mod n)(r^-1 mod n) mod n
   let a = y % n;
@@ -190,16 +173,6 @@ function Z(y, r, n) {
   let z = (a * b) % n;
 
   return z;
-}
-
-function KeyGeneration() {
-  let p = primes[0];
-  let q = primes[1];
-  let n = p * q;
-  let phi = (p - 1n) * (q - 1n);
-  let d = bigintModArith.modInv(e, phi);
-
-  return { n, d };
 }
 
 function validation(h, z, n) {
@@ -223,14 +196,12 @@ function hashBigInt(z) {
 
 async function RSA_OPRF(file) {
   let h = BigInt(`0x${buffToStr(await hash(file))}`);
-  let K = KeyGeneration();
-  const r = genRand(0n, K.n);
+  let n = await getPublicKey();
+  const r = genRand(0n, n);
 
-  let x = X(h, r, e, K.n);
-
-  let y = Y(x, K.d, K.n);
-
-  let z = Z(y, r, K.n);
+  let x = X(h, r, e, n);
+  let y = await postX(x);
+  let z = Z(y, r, n);
 
   if (validation(h, z, K.n)) return await hashBigInt(z);
 }
