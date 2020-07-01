@@ -243,6 +243,9 @@ async function postFile(file) {
     console.log(`Uploading ${file.path}...`);
 
     await uploadFile(file.outDir, file.outName, file.key, file.hash);
+
+    console.log(`Uploaded ${file.path}`);
+
     return true;
   } catch (err) {
     return err;

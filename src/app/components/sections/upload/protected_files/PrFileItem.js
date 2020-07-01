@@ -34,6 +34,16 @@ export default function PrFileItem({
   }, [file.status]);
 
   const setFinished = result => {
+    if (typeof result === 'string') {
+      messageQueue.add({
+        title: 'No se pudo proteger el archivo',
+        message: result,
+        style: 'error',
+      });
+      updateStatus('unprotected');
+      return;
+    }
+
     let { outDir, outName, pKey, pHash } = result;
 
     file.outDir = outDir;

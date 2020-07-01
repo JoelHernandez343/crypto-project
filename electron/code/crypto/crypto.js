@@ -185,7 +185,7 @@ function hashBigInt(z) {
     hash.on('readable', () => {
       const data = hash.read();
       if (data) {
-        resolve(hash.digest().toString('hex'));
+        resolve(hash.digest());
       }
     });
 
@@ -203,19 +203,26 @@ async function RSA_OPRF(file) {
   let y = await postX(x);
   let z = Z(y, r, n);
 
-  if (validation(h, z, K.n)) return await hashBigInt(z);
+  if (validation(h, z, n)) return await hashBigInt(z);
+
+  throw 'Llave no válida';
 }
 
 async function protect(file) {
-  const key = await RSA_OPRF(file);
+  try {
+    const key = await RSA_OPRF(file);
 
-  const encryptedFile = await AESencrypt(file, key);
-  const pHash = buffToStr(await hash(encryptedFile));
-  const pKey = buffToStr(await RSA1024encrypt(key, PUBLIC_KEY_PATH));
+    const encryptedFile = await AESencrypt(file, key);
+    const pHash = buffToStr(await hash(encryptedFile));
+    const pKey = buffToStr(await RSA1024encrypt(key, PUBLIC_KEY_PATH));
 
-  const { dir, name } = separateDirAndName(encryptedFile);
+    const { dir, name } = separateDirAndName(encryptedFile);
 
-  return { outDir: dir, outName: name, pKey, pHash };
+    return { outDir: dir, outName: name, pKey, pHash };
+  } catch (err) {
+    console.log(err);
+    return 'Ocurrió un error inesperado';
+  }
 }
 
 async function recover(file, destDir) {
