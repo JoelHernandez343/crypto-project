@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const { dialog } = require('electron');
+const bigintModArith = require('bigint-mod-arith');
 
 const {
   separateDirAndName,
@@ -11,6 +12,19 @@ const {
 const { searchForKey, downloadFile } = require('../google-api/drive');
 
 const iv = strToBuff('36d6b93416b72e989359a5f0b73defde');
+const primes = [
+  2425967623052370772757633156976982469681n,
+  1451730470513778492236629598992166035067n,
+  6075380529345458860144577398704761614649n,
+  3615415881585117908550243505309785526231n,
+  5992830235524142758386850633773258681119n,
+  4384165182867240584805930970951575013697n,
+  5991810554633396517767024967580894321153n,
+  6847944682037444681162770672798288913849n,
+  4146162919458530168953357282201621124057n,
+  5570373270183181665098052481109678989411n,
+];
+const e = 2946061206446183136035364744505844247510411120867004678223655427763264058485174539n;
 
 const UPLOAD_PATH = path.join('electron', 'tmpToUpload');
 const DECRYPT_PATH = path.join('electron', 'tmpToDecrypt');
@@ -135,8 +149,90 @@ function strToBuff(string) {
   return Buffer.from(string, 'hex');
 }
 
+function genRand(minimum, maximum) {
+  let distance = maximum - minimum;
+  let b;
+
+  if (minimum >= maximum) {
+    console.log('Minimum number should be less than maximum');
+    return false;
+  }
+
+  let maxBytes = maximum.toString('16').length / 2;
+
+  do {
+    let randbytes = crypto.randomBytes(maxBytes).toString('hex');
+    b = (BigInt(`0x${randbytes}`) % distance) + minimum;
+  } while (bigintModArith.modInv(b, maximum) === NaN);
+
+  return b;
+}
+
+function X(h, r, e, n) {
+  // (h mod n)(r^e mod n) mod n
+  let a = h % n;
+  let b = bigintModArith.modPow(r, e, n);
+  let x = (a * b) % n;
+
+  return x;
+}
+
+function Y(x, d, n) {
+  // x^d mod n
+  let y = bigintModArith.modPow(x, d, n);
+  return y;
+}
+
+function Z(y, r, n) {
+  // (y mod n)(r^-1 mod n) mod n
+  let a = y % n;
+  let b = bigintModArith.modInv(r, n);
+  let z = (a * b) % n;
+
+  return z;
+}
+
+function KeyGeneration() {
+  let p = primes[0];
+  let q = primes[1];
+  let n = p * q;
+  let phi = (p - 1n) * (q - 1n);
+  let d = bigintModArith.modInv(e, phi);
+
+  return { n, d };
+}
+
+function validation(h, z, n) {
+  return bigintModArith.modPow(z, e, n) === h;
+}
+
+function hashBigInt(z) {
+  const hash = crypto.createHash('sha256');
+  return new Promise((resolve, reject) => {
+    hash.on('readable', () => {
+      const data = hash.read();
+      if (data) {
+        resolve(hash.digest().toString('hex'));
+      }
+    });
+
+    hash.write(z.toString('16'));
+    hash.end();
+  });
+}
+
 async function RSA_OPRF(file) {
-  return await hash(file);
+  let h = BigInt(`0x${buffToStr(await hash(file))}`);
+  let K = KeyGeneration();
+  const r = genRand(0n, K.n);
+
+  let x = X(h, r, e, K.n);
+
+  let y = Y(x, K.d, K.n);
+
+  let z = Z(y, r, K.n);
+
+  if (validation(h, z, K.n)) return await hashBigInt(z);
 }
 
 async function protect(file) {
