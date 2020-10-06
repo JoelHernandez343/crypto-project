@@ -44,7 +44,7 @@
   "devDependencies": {
     "@getstation/electron-google-oauth2": "^2.1.0",
     "@mdi/font": "^5.3.45",
-    "electron": "^9.0.4",
+    "electron": "^9.3.0",
     "gulp": "^4.0.2",
     "gulp-postcss": "^8.0.0",
     "gulp-rename": "^2.0.0",
