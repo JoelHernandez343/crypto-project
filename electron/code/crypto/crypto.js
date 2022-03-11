@@ -13,7 +13,8 @@ const { searchForKey, downloadFile } = require('../google-api/drive');
 const { getPublicKey, postX } = require('../net/net');
 
 const iv = strToBuff('36d6b93416b72e989359a5f0b73defde');
-const e = 2946061206446183136035364744505844247510411120867004678223655427763264058485174539n;
+const e =
+  2946061206446183136035364744505844247510411120867004678223655427763264058485174539n;
 
 const UPLOAD_PATH = path.join('electron', 'tmpToUpload');
 const DECRYPT_PATH = path.join('electron', 'tmpToDecrypt');
@@ -104,6 +105,7 @@ async function loadRSAPaths() {
 
     return true;
   } catch (err) {
+    console.log(err);
     return 'Archivos inválidos: archivos corruptos';
   }
 }
