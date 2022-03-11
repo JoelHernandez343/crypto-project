@@ -15,16 +15,18 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:n17": "react-scripts --openssl-legacy-provider start",
+    "yarn:start": "yarn start",
+    "yarn:start:n17": "yarn run start:n17",
+    "gulp": "gulp -f gulp",
+    "run:electron": "wait-on http://127.0.0.1:3000 && electron .",
+    "dev:final": "run-p -r yarn:start run:electron",
+    "dev:final:n17": "run-p -r yarn:start:n17 run:electron",
+    "dev": "run-s gulp dev:final",
+    "dev:n17": "run-s gulp dev:final:n17",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "gulp": "gulp -f gulp",
-    "start:nobrowser": "BROWSER=none yarn start",
-    "wait:server": "wait-on http://localhost:3000",
-    "electron": "electron .",
-    "run:electron": "run-s wait:server electron",
-    "dev:last": "run-p -r start:nobrowser run:electron",
-    "dev": "run-s gulp dev:last"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -50,6 +52,6 @@
     "gulp-rename": "^2.0.0",
     "npm-run-all": "^4.1.5",
     "tailwindcss": "^1.4.6",
-    "wait-on": "^5.0.1"
+    "wait-on": "^6.0.1"
   }
 }
