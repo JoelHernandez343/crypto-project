@@ -12,13 +12,13 @@ CryptoDplication es una aplicación multiplataforma que encripta archivos utiliz
 
 ## Tecnologías utilizadas
 
-| Tecnología         | Uso                         |
-| ------------------ | --------------------------- |
-| React Js           | UI                          |
-| Tailwind CSS + JIT | UI                          |
-| Node Crypto Module | Encriptación de archivos    |
-| GoogleOAuth2       | Inicio de sesión con Google |
-| Electron JS        | Aplicación de escritorio    |
+| Tecnología                                                              | Uso                         |
+| ----------------------------------------------------------------------- | --------------------------- |
+| [React Js](https://reactjs.org/)                                        | UI                          |
+| [Tailwind CSS + JIT](https://tailwindcss.com/)                          | UI                          |
+| Node Crypto Module                                                      | Encriptación de archivos    |
+| [GoogleOAuth2](https://developers.google.com/identity/protocols/oauth2) | Inicio de sesión con Google |
+| [Electron JS](https://www.electronjs.org/)                              | Aplicación de escritorio    |
 
 ## Uso
 
