@@ -1,75 +1,48 @@
 # Proyecto de criptografía 2020
 
-README.md en desarrollo...
+## Problemática
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> In a certain company, they have a server to store sensitive information. To keep it secure, every file stored in this server must be encrypted. The CEO have realized that they are storing duplicated files. The company has financial problems, thus it is not possible to buy more servers. Still they need to keep secure the sensitive information, but without duplicates. The CEO has discovered that there is a cryptographic technique to solve this problem, called secure deduplication, but he does not know anything about cryptography.
 
-## Available Scripts
+> Imagine that you have a company that provides security services and designa a software to help the company with the problem.
 
-In the project directory, you can run:
+## Descripción
 
-### `yarn start`
+CryptoDplication es una aplicación multiplataforma que encripta archivos utilizando las llaves RSA que se encuentran en el sistema operativo del usuario y permite guardarlos junto con sus mentadatos criptográficos en Google Drive.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Tecnologías utilizadas
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+| Tecnología         | Uso                         |
+| ------------------ | --------------------------- |
+| React Js           | UI                          |
+| Tailwind CSS + JIT | UI                          |
+| Node Crypto Module | Encriptación de archivos    |
+| GoogleOAuth2       | Inicio de sesión con Google |
+| Electron JS        | Aplicación de escritorio    |
 
-### `yarn test`
+## Uso
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Instalar dependencias utilizando Yarn:
 
-### `yarn build`
+```
+yarn install
+```
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Instalar el [servidor de llaves criptográficas](https://github.com/JoelHernandez343/crypto-project-server) y ponerlo en funcionamiento
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Iniciar servidor de desarrollo:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+// Node v17+
+npm run dev:n17
+// Node >v17
+npm run dev
+```
 
-### `yarn eject`
+## Generando llaves ssh RSA
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+En el repositorio se incluyen 3 archivos de ejemplo, la clave privada `key`, la clave pública `key.pub` y la clave pública en formato PEM `key.pub.pem`, pero si se quieren generar claves personales, ejecutar el siguiente comando:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-
-
-:tada:
+```
+ssh-keygen -t rsa -b 1024 -m PEM -f "./key" -N '""' && ssh-keygen -f .\key.pub -e -m pem > key.pub.pem
+```
