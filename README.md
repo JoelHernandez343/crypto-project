@@ -10,7 +10,7 @@
 
 ## Descripción
 
-CryptoDplication es una aplicación multiplataforma que encripta archivos utilizando las llaves RSA que se encuentran en el sistema operativo del usuario y permite guardarlos junto con sus mentadatos criptográficos en Google Drive.
+CryptoDplication es una aplicación multiplataforma que encripta archivos utilizando las llaves RSA que se encuentran en el sistema operativo del usuario y permite guardarlos junto con sus metadatos criptográficos en Google Drive.
 
 ## Tecnologías utilizadas
 
